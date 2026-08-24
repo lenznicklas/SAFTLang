@@ -52,6 +52,8 @@ public class SemanticAnalyzer
                 LangType.Int,
             BoolExpr =>
                 LangType.Bool,
+            StringExpr =>
+                LangType.String,
             IdentifierExpr ident =>
                 AnalyzeIdentifier(ident),
             BinaryExpr binary =>

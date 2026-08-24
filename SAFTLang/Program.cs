@@ -10,7 +10,8 @@ class Program
         string source = """
                         let x = 10
                         let y = x + 10 +02
-                        let b = true
+                        let int = true
+                        let str = "string"
                         """;
 
         // Lexer

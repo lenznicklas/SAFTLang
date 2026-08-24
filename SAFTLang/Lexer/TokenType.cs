@@ -4,6 +4,7 @@ namespace SAFTLang.Lexer
     {
         EOF,
         Identifier,
+        String,
         Let,
         Const,
         

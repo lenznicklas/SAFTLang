@@ -59,7 +59,10 @@ public class CodeGenerator
                 GenerateBinaryExpression(binary),
             
             BoolExpr boolean =>
-                boolean.Value ? "1" : "0",
+                boolean.Value ? "true" : "false",
+            
+            StringExpr str =>
+                $"\"{EscapeCString(str.Value)}\"",
 
             _ => throw new Exception($"Unknown expression {expr.GetType().Name}")
         };
@@ -90,7 +93,15 @@ public class CodeGenerator
         {
             LangType.Int => "int",
             LangType.Bool => "bool",
+            LangType.String => "const char*",
             _ => throw new Exception($"Unknown type {type.GetType().Name}")
         };
+    }
+
+    private string EscapeCString(string str)
+    {
+        return str
+            .Replace("\\", "\\\\")
+            .Replace("\"", "\\\"");
     }
 }

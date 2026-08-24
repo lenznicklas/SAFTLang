@@ -8,6 +8,7 @@ public record NumberExpr(string Value) : Expr;
 public record IdentifierExpr(string Name) : Expr;
 public record BinaryExpr(Expr Left, TokenType Operator, Expr Right) : Expr;
 public record BoolExpr(bool Value) : Expr;
+public record StringExpr(string Value) : Expr;
 
 public abstract record Statement;
 
@@ -122,6 +123,12 @@ public class Parser
         {
             Advance();
             return new BoolExpr(false);
+        }
+
+        if (token.Type == TokenType.String)
+        {
+            Advance();
+            return new StringExpr(token.Value);
         }
 
         if (token.Type == TokenType.Identifier)

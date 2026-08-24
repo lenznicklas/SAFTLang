@@ -46,6 +46,12 @@ namespace SAFTLang.Lexer
                     continue;
                 }
 
+                if (c == '"')
+                {
+                    tokens.Add(ReadString());
+                    continue;
+                }
+
                 // Identifier / Keywords
                 if (char.IsLetter(c) || c == '_')
                 {
@@ -178,6 +184,25 @@ namespace SAFTLang.Lexer
 
             string value = _source[start.._position];
             return new Token(TokenType.Number, value);
+        }
+
+        private Token ReadString()
+        {
+            Advance();
+            int start = _position;
+
+            while (!IsAtEnd() && Current() != '"')
+            {
+                Advance();
+            }
+
+            if (IsAtEnd())
+            {
+                throw new Exception($"Unexpected end of string");
+            }
+            string value = _source[start.._position];
+            Advance();
+            return new Token(TokenType.String, value);
         }
 
 
