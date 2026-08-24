@@ -120,6 +120,7 @@ namespace SAFTLang.Lexer
                         if (Peek() == '=')
                         {
                             tokens.Add(new Token(TokenType.LessEqual, "<="));
+                            Advance();
                         }
                         else
                         {
@@ -130,6 +131,7 @@ namespace SAFTLang.Lexer
                         if (Peek() == '=')
                         {
                             tokens.Add(new Token(TokenType.GreaterEqual, ">="));
+                            Advance();
                         }
                         else
                         {
@@ -140,6 +142,7 @@ namespace SAFTLang.Lexer
                         if (Peek() == '=')
                         {
                             tokens.Add(new Token(TokenType.NotEqual, "!="));
+                            Advance();
                         }
                         else
                         {
