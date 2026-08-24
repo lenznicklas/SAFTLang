@@ -1,0 +1,14 @@
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/bin/Debug/net10.0/SAFTLang
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/bin/Debug/net10.0/SAFTLang.deps.json
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/bin/Debug/net10.0/SAFTLang.runtimeconfig.json
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/bin/Debug/net10.0/SAFTLang.dll
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/bin/Debug/net10.0/SAFTLang.pdb
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/SAFTLang.GeneratedMSBuildEditorConfig.editorconfig
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/SAFTLang.AssemblyInfoInputs.cache
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/SAFTLang.AssemblyInfo.cs
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/SAFTLang.csproj.CoreCompileInputs.cache
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/SAFTLang.dll
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/refint/SAFTLang.dll
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/SAFTLang.pdb
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/SAFTLang.genruntimeconfig.cache
+/home/lenz/RiderProjects/SAFTLang/SAFTLang/obj/Debug/net10.0/ref/SAFTLang.dll

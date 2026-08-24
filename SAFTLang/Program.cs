@@ -1,0 +1,34 @@
+﻿using SAFTLang.Lexer;
+using SAFTLang.Parser;
+using SAFTLang.SemanticAnalyzer;
+using SAFTLang.CodeGenerator;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        string source = """
+                        let x = 10
+                        let y = x + 10 +02
+                        let b = true
+                        """;
+
+        // Lexer
+        var lexer = new Lexer(source);
+        List<Token> tokens = lexer.Tokenize();
+
+        // Parser
+        var parser = new Parser(tokens);
+        List<Statement> statements = parser.Parse();
+
+        // Semantic Analysis
+        var analyzer = new SemanticAnalyzer();
+        analyzer.Analyze(statements);
+
+        // C Code Generation
+        var generator = new CodeGenerator(analyzer);
+        string cCode = generator.Generate(statements);
+
+        Console.WriteLine(cCode);
+    }
+}
