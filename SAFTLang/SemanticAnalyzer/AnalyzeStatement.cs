@@ -14,6 +14,9 @@ public partial class SemanticAnalyzer
             case ConstStatement _const:
                 AnalyzeConstStatement(_const);
                 break;
+            case IfStatement _if:
+                AnalyzeIfStatement(_if);
+                break;
             default:
                 throw new Exception($"Unknown statement {statement.GetType().Name}");
         }
@@ -21,26 +24,42 @@ public partial class SemanticAnalyzer
 
     private void AnalyzeLetStatement(LetStatement statement)
     {
-        if (_variables.ContainsKey(statement.Name))
-        {
-            throw new Exception($"Variable {statement.Name} already defined");
-        }
-
-        LangType inferredType = AnalyzeExpression(statement.Value);
-        
-        _variables.Add(statement.Name, inferredType);
+        LangType type= AnalyzeExpression(statement.Value);
+        DeclareVariable(statement.Name, type);
+        _statementTypes[statement] = type;
     }
-    
+
     private void AnalyzeConstStatement(ConstStatement statement)
     {
-        if (_variables.ContainsKey(statement.Name))
-        {
-            throw new Exception($"Variable {statement.Name} already defined");
-        }
+        LangType type = AnalyzeExpression(statement.Value);
+        DeclareVariable(statement.Name, type);
+        _statementTypes[statement] = type;
+    }
 
-        LangType inferredType = AnalyzeExpression(statement.Value);
+    private void AnalyzeIfStatement(IfStatement statement)
+    {
+        LangType conditionType = AnalyzeExpression(statement.Condition);
+
+        if (conditionType != LangType.Bool)
+        {
+            throw new Exception(
+                $"If condition must be Bool, got {conditionType}"
+            );
+        }
         
-        _variables.Add(statement.Name, inferredType);
+        BeginScope();
+
+        try
+        {
+            foreach (Statement bodyStatement in statement.Body)
+            {
+                AnalyzeStatement(bodyStatement);
+            }
+        }
+        finally
+        {
+            EndScope();
+        }
     }
 
 }

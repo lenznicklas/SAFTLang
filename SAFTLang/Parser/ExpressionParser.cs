@@ -109,6 +109,16 @@ public partial class Parser
             Advance();
             return new IdentifierExpr(token.Value);
         }
+
+        if (token.Type == TokenType.LParen)
+        {
+            Advance();
+            Expr expression = ParseExpression();
+
+            Consume(TokenType.RParen);
+            
+            return expression;
+        }
         
         throw new Exception($"Expected expression, got {token.Type}");
     }

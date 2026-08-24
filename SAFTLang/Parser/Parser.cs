@@ -17,16 +17,11 @@ public partial class Parser
     public List<Statement> Parse()
     {
         var statements = new List<Statement>();
-
+        SkipNewLines();
         while (!IsAtEnd())
         {
-            if (Current().Type == TokenType.Newline)
-            {
-                Advance();
-                continue;
-            }
-            
             statements.Add(ParseStatement());
+            SkipNewLines();
         }
         return statements;
     }

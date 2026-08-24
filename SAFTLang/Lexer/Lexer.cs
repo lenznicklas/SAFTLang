@@ -6,7 +6,7 @@ namespace SAFTLang.Lexer
     {
         private readonly string _source;
         private int _position;
-
+        private int _parenthesisDepth;
         public Lexer(string source)
         {
             _source = source;
@@ -24,7 +24,11 @@ namespace SAFTLang.Lexer
                 // Newline
                 if (c == '\n')
                 {
-                    tokens.Add(new Token(TokenType.Newline, "\\n"));
+                    if (_parenthesisDepth == 0)
+                    {
+                        tokens.Add(new Token(TokenType.Newline, "\\n"));
+                    }
+
                     while (!IsAtEnd() && Current() == '\n')
                     {
                         Advance();
@@ -89,9 +93,16 @@ namespace SAFTLang.Lexer
                         break;
                     case '(':
                         tokens.Add(new Token(TokenType.LParen, "("));
+                        _parenthesisDepth++;
                         break;
                     case ')':
+                        if (_parenthesisDepth == 0)
+                        {
+                            throw new Exception("Unexpected closing parenthesis ')'");
+                        }
                         tokens.Add(new Token(TokenType.RParen, ")"));
+
+                        _parenthesisDepth--;
                         break;
                     case '[':
                         tokens.Add(new Token(TokenType.LBracket, "["));
@@ -168,6 +179,8 @@ namespace SAFTLang.Lexer
                     return new Token(TokenType.True, "true");
                 case "false":
                     return new Token(TokenType.False, "false");
+                case "if":
+                    return new Token(TokenType.If, "if");
             }
 
             return new Token(TokenType.Identifier, value);

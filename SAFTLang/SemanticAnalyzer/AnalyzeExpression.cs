@@ -25,12 +25,7 @@ public partial class SemanticAnalyzer
 
     private LangType AnalyzeIdentifier(IdentifierExpr ident)
     {
-        if (!_variables.TryGetValue(ident.Name, out LangType type))
-        {
-            throw new Exception($"Unknown variable '{ident.Name}'");
-        }
-
-        return type;
+        return ResolveVariable(ident.Name);
     }
 
     private LangType AnalyzeBinary(BinaryExpr binary)

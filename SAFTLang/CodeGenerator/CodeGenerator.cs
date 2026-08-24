@@ -25,7 +25,7 @@ public class CodeGenerator
 
         foreach (var statement in statements)
         {
-            output.AppendLine($"    {GenerateStatement(statement)}");
+            GenerateStatement(output, statement, 1);
         }
         
         output.AppendLine();
@@ -34,19 +34,47 @@ public class CodeGenerator
         return output.ToString();
     }
 
-    private string GenerateStatement(Statement statement)
+    private void GenerateStatement(
+        StringBuilder output,
+        Statement statement,
+        int indent)
     {
-        return statement switch
-        {
-            LetStatement let =>
-                $"{GenerateType(_analyzer.GetVariableType(let.Name))} " +
-                $"{let.Name} = {GenerateExpression(let.Value)};",
-            ConstStatement _const =>
-                $"const {GenerateType(_analyzer.GetVariableType(_const.Name))} " +
-                $"{_const.Name} = {GenerateExpression(_const.Value)}",
+        string indentation = new string(' ', indent * 4);
 
-            _ => throw new Exception($"Unknown statement {statement.GetType().Name}")
-        };
+        switch (statement)
+        {
+            case LetStatement let:
+                output.AppendLine(
+                    $"{indentation}" +
+                    $"{GenerateType(_analyzer.GetStatementType(let))} " +
+                    $"{let.Name} = {GenerateExpression(let.Value)};"
+                );
+                break;
+            case ConstStatement constStatement:
+                output.AppendLine(
+                    $"{indentation}const " +
+                    $"{GenerateType(_analyzer.GetStatementType(constStatement))} " +
+                    $"{constStatement.Name} = {GenerateExpression(constStatement.Value)};"
+                );
+                break;
+            case IfStatement ifStatement:
+                output.AppendLine(
+                    $"{indentation}if " +
+                    $"({GenerateExpression(ifStatement.Condition)})"
+                );
+
+                output.AppendLine($"{indentation}{{");
+
+                foreach (Statement bodyStatement in ifStatement.Body)
+                {
+                    GenerateStatement(output, bodyStatement, indent + 1);
+                }
+                output.AppendLine($"{indentation}}}");
+                break;
+            
+            default:
+                throw new Exception($"Unknown statement {statement.GetType().Name}");
+        }
     }
 
     private string GenerateExpression(Expr expr)

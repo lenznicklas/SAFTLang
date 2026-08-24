@@ -7,17 +7,14 @@ public partial class Parser
 {
     private Statement ParseStatement()
     {
-        if (Current().Type == TokenType.Let)
-        {
-            return ParseLetStatement();
-        }
 
-        if (Current().Type == TokenType.Const)
+        return Current().Type switch
         {
-            return ParseConstStatement();
-        }
-        
-        throw new Exception($"Unexpected token {Current().Type}");
+            TokenType.Let => ParseLetStatement(),
+            TokenType.Const => ParseConstStatement(),
+            TokenType.If => ParseIfStatement(),
+            _ => throw new Exception($"Unexpected token {Current().Type}"),
+        };
     }
 
     private Statement ParseLetStatement()
@@ -48,6 +45,35 @@ public partial class Parser
         ConsumeStatementEnd();
         
         return new ConstStatement(name.Value, value);
+    }
+
+    private Statement ParseIfStatement()
+    {
+        Consume(TokenType.If);
+
+        Expr condition = ParseExpression();
+
+        List<Statement> body = ParseBlock();
+
+        return new IfStatement(condition, body);
+    }
+
+    private List<Statement> ParseBlock()
+    {
+        Consume(TokenType.LBrace);
+
+        SkipNewLines();
+
+        var statements = new List<Statement>();
+
+        while (Current().Type != TokenType.RBrace && !IsAtEnd())
+        {
+            statements.Add(ParseStatement());
+            SkipNewLines();
+        }
+
+        Consume(TokenType.RBrace);
+        return statements;
     }
 
 }

@@ -58,4 +58,12 @@ public partial class Parser
         return Current().Type == TokenType.EOF;
     }
 
+    private void SkipNewLines()
+    {
+        while (Current().Type == TokenType.Newline)
+        {
+            Advance();
+        }
+    }
+
 }
