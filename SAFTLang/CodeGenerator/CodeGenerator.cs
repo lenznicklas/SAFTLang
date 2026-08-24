@@ -17,7 +17,8 @@ public class CodeGenerator
     {
         var output = new StringBuilder();
 
-        output.AppendLine("#include <stdio.h");
+        output.AppendLine("#include <stdio.h>");
+        output.AppendLine("#include <stdbool.h>");
         output.AppendLine();
         output.AppendLine("int main(void)");
         output.AppendLine("{");
@@ -83,10 +84,17 @@ public class CodeGenerator
                 TokenType.Minus => "-",
                 TokenType.Star => "*",
                 TokenType.Slash => "/",
+                
+                TokenType.EqualEqual => "==",
+                TokenType.NotEqual => "!=",
+                TokenType.Less => "<",
+                TokenType.LessEqual => "<=",
+                TokenType.Greater => ">",
+                TokenType.GreaterEqual => ">=",
 
                 _ => throw new Exception($"Unknown operator: {binary.Operator}")
             };
-            return $"{left} {op} {right}";
+            return $"({left} {op} {right})";
         
     }
 

@@ -14,6 +14,7 @@ class Program
                         let int = true
                         let str = "string"
                         const pi = 5
+                        let f = 4<9
                         """;
 
         // Lexer

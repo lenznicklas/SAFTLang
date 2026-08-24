@@ -26,7 +26,7 @@ public partial class Parser
         
         Token name = Consume(TokenType.Identifier);
 
-        Consume(TokenType.Equals);
+        Consume(TokenType.Equal);
 
         Expr value = ParseExpression();
 
@@ -41,7 +41,7 @@ public partial class Parser
 
         Token name = Consume(TokenType.Identifier);
 
-        Consume(TokenType.Equals);
+        Consume(TokenType.Equal);
 
         Expr value = ParseExpression();
         

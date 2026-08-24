@@ -81,7 +81,7 @@ namespace SAFTLang.Lexer
                         }
                         else
                         {
-                            tokens.Add(new Token(TokenType.Equals, "="));
+                            tokens.Add(new Token(TokenType.Equal, "="));
                         }
                         break;
                     case ';':

@@ -7,7 +7,43 @@ public partial class Parser
 {
     private Expr ParseExpression()
     {
-        return ParseAddition();
+        return ParseEquality();
+    }
+
+    private Expr ParseEquality()
+    {
+        Expr left = ParseComparison();
+
+        while (Current().Type == TokenType.EqualEqual ||
+               Current().Type == TokenType.NotEqual)
+        {
+            TokenType op = Current().Type;
+            Advance();
+
+            Expr right = ParseComparison();
+            
+            left = new BinaryExpr(left, op, right);
+        }
+        
+        return left;
+    }
+
+    private Expr ParseComparison()
+    {
+        Expr left = ParseAddition();
+
+        while (Current().Type == TokenType.Less ||
+               Current().Type == TokenType.LessEqual ||
+               Current().Type == TokenType.Greater ||
+               Current().Type == TokenType.GreaterEqual)
+        {
+            TokenType op = Current().Type;
+            Advance();
+            Expr right = ParseAddition();
+            left = new BinaryExpr(left, op, right);
+        }
+        
+        return left;
     }
 
     private Expr ParseAddition()

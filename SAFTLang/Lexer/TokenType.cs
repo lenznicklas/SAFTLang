@@ -18,7 +18,7 @@ namespace SAFTLang.Lexer
         Star,
         Slash,
 
-        Equals,
+        Equal,
         Semicolon,
         Newline,
         
