@@ -2,6 +2,7 @@
 using SAFTLang.Parser;
 using SAFTLang.SemanticAnalyzer;
 using SAFTLang.CodeGenerator;
+using SAFTLang.AST;
 
 class Program
 {
