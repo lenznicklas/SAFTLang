@@ -1,4 +1,4 @@
-namespace SAFTLang.Lexer;
+namespace SAFTLang.AST;
 
 public enum LangType
 {

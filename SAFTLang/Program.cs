@@ -13,6 +13,7 @@ class Program
                         let y = x + 10 +02
                         let int = true
                         let str = "string"
+                        const pi = 5
                         """;
 
         // Lexer

@@ -11,6 +11,11 @@ public partial class Parser
         {
             return ParseLetStatement();
         }
+
+        if (Current().Type == TokenType.Const)
+        {
+            return ParseConstStatement();
+        }
         
         throw new Exception($"Unexpected token {Current().Type}");
     }
@@ -28,6 +33,21 @@ public partial class Parser
         ConsumeStatementEnd();
 
         return new LetStatement(name.Value, value);
+    }
+
+    private Statement ParseConstStatement()
+    {
+        Consume(TokenType.Const);
+
+        Token name = Consume(TokenType.Identifier);
+
+        Consume(TokenType.Equals);
+
+        Expr value = ParseExpression();
+        
+        ConsumeStatementEnd();
+        
+        return new ConstStatement(name.Value, value);
     }
 
 }

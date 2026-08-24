@@ -40,6 +40,9 @@ public class CodeGenerator
             LetStatement let =>
                 $"{GenerateType(_analyzer.GetVariableType(let.Name))} " +
                 $"{let.Name} = {GenerateExpression(let.Value)};",
+            ConstStatement _const =>
+                $"const {GenerateType(_analyzer.GetVariableType(_const.Name))} " +
+                $"{_const.Name} = {GenerateExpression(_const.Value)}",
 
             _ => throw new Exception($"Unknown statement {statement.GetType().Name}")
         };
