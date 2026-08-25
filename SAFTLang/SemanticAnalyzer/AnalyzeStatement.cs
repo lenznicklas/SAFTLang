@@ -32,14 +32,14 @@ public partial class SemanticAnalyzer
     private void AnalyzeLetStatement(LetStatement statement)
     {
         LangType type= AnalyzeExpression(statement.Value);
-        DeclareVariable(statement.Name, type, isConst: false);
+        DeclareVariable(statement.Name, type, isConst: false, statement.Span);
         _statementTypes[statement] = type;
     }
 
     private void AnalyzeConstStatement(ConstStatement statement)
     {
         LangType type = AnalyzeExpression(statement.Value);
-        DeclareVariable(statement.Name, type, isConst:true);
+        DeclareVariable(statement.Name, type, isConst:true, statement.Span);
         _statementTypes[statement] = type;
     }
 
@@ -80,6 +80,11 @@ public partial class SemanticAnalyzer
     {
         VariableSymbol? symbol = ResolveVariable(statement.Name, statement.Span);
 
+        if (symbol is null)
+        {
+            return;
+        }
+        
         if (symbol.IsConst)
         {
             _diagnostics.ReportError(
@@ -90,11 +95,16 @@ public partial class SemanticAnalyzer
 
         LangType valueType = AnalyzeExpression(statement.Value);
 
+        if (valueType != LangType.Error)
+        {
+            return;
+        }
+
         if (valueType != symbol.Type)
         {
             _diagnostics.ReportError(
-                statement.Span,
-                $"Can't assign {symbol.Name} to type {valueType}"
+                statement.Value.Span,
+                $"Can't assign {valueType} to {symbol.Name} of type {valueType}"
             );
         }
     }

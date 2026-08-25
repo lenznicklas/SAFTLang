@@ -4,4 +4,4 @@ namespace SAFTLang.AST;
 
 public abstract record Expr(
     SourceSpan Span
-    )  : SyntaxNode;
+    )  : SyntaxNode(Span);

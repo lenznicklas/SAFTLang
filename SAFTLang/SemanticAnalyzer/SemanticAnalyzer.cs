@@ -33,16 +33,18 @@ public partial class SemanticAnalyzer
         _scopes.Pop();
     }
 
-    private VariableSymbol DeclareVariable(
+    private VariableSymbol? DeclareVariable(
         string name,
         LangType type,
-        bool isConst)
+        bool isConst,
+        SourceSpan span)
     {
         Dictionary<string, VariableSymbol> currentScope = _scopes.Peek();
 
         if (currentScope.ContainsKey(name))
         {
-            throw new Exception(
+            _diagnostics.ReportError(
+                span,
                 $"Variable '{name}' is already defined in this scope"
             );
         }

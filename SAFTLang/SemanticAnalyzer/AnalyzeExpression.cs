@@ -1,5 +1,6 @@
 using SAFTLang.AST;
 using SAFTLang.Lexer;
+using SAFTLang.Lexer.Text;
 using SAFTLang.SemanticAnalyzer.Symbols;
 
 namespace SAFTLang.SemanticAnalyzer;
@@ -46,14 +47,14 @@ public partial class SemanticAnalyzer
             case TokenType.Minus:
             case TokenType.Star:
             case TokenType.Slash:
-                RequireTypes(binary.Operator, leftType, rightType, LangType.Int);
+                RequireTypes(binary.Operator, leftType, rightType, LangType.Int, binary.Span);
                 return LangType.Int;
 
             case TokenType.Less:
             case TokenType.Greater:
             case TokenType.LessEqual:
             case TokenType.GreaterEqual:
-                RequireTypes(binary.Operator, leftType, rightType, LangType.Int);
+                RequireTypes(binary.Operator, leftType, rightType, LangType.Int, binary.Span);
                 return LangType.Bool;
 
             case TokenType.EqualEqual:
@@ -76,19 +77,27 @@ public partial class SemanticAnalyzer
         }
     }
 
-    private void RequireTypes(
+    private bool RequireTypes(
             TokenType op,
             LangType left,
             LangType right,
-            LangType expected)
+            LangType expected,
+            SourceSpan span)
         {
+            if (left == LangType.Error ||
+                right == LangType.Error)
+            {
+                return false;
+            }
             if (left != expected || right != expected)
             {
-                throw new Exception(
-                    $"Operator {op} requires two {expected} operands, " +
-                    $"but got {left} and {right}."
-                );
+                _diagnostics.ReportError(
+                    span,
+                    $"Operator {op} requires type {expected} but got {left} and {right}"
+                    );
+                return false;
             }
+            return true;
         }
     
 

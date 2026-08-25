@@ -3,6 +3,7 @@ using SAFTLang.Parser;
 using SAFTLang.SemanticAnalyzer;
 using SAFTLang.CodeGenerator;
 using SAFTLang.AST;
+using SAFTLang.Diagnostics;
 
 class Program
 {
@@ -66,6 +67,15 @@ class Program
         // Semantic Analysis
         var analyzer = new SemanticAnalyzer();
         analyzer.Analyze(statements);
+
+        if (analyzer.Diagnostics.Count > 0)
+        {
+            foreach (Diagnostic diagnostic in analyzer.Diagnostics)
+            {
+                Console.Error.WriteLine(diagnostic);
+            }
+            return;
+        }
 
         // C Code Generation
         var generator = new CodeGenerator(analyzer);
