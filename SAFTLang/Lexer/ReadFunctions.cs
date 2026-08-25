@@ -73,7 +73,7 @@ public partial class Lexer
             throw new Exception($"{line}:{column}: unterminated string");
         }
         
-        string value = _source[start.._position];
+        string value = _source[valueStart.._position];
         
         Advance();
 

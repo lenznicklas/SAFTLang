@@ -211,7 +211,7 @@ namespace SAFTLang.Lexer;
                     case '}':
                         tokens.Add(
                             CreateSimpleToken(
-                                TokenType.LBrace,
+                                TokenType.RBrace,
                                 "}",
                                 tokenStart,
                                 tokenLine,
