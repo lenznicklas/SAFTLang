@@ -25,7 +25,11 @@ public partial class SemanticAnalyzer
                 AnalyzeAssignmentStatement(stmt);
                 break;
             default:
-                throw new Exception($"Unknown statement {statement.GetType().Name}");
+                _diagnostics.ReportError(
+                    statement.Span,
+                    $"Unknown statement {statement.GetType().Name}"
+                );
+                break;
         }
     }
 

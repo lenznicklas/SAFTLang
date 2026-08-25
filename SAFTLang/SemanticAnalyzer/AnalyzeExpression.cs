@@ -21,7 +21,8 @@ public partial class SemanticAnalyzer
                 AnalyzeIdentifier(ident),
             BinaryExpr binary =>
                 AnalyzeBinary(binary),
-            _ => throw new Exception($"Unknown expression {expr.GetType().Name}")
+            _ => ReportUnknownExpression(expr)
+        
         };
     }
 
@@ -61,19 +62,27 @@ public partial class SemanticAnalyzer
             case TokenType.NotEqual:
                 if (leftType != rightType)
                 {
-                    throw new Exception(
+                    _diagnostics.ReportError(
+                        binary.Span,
                         $"Cannot compare {leftType} with {rightType}"
                     );
                 }
 
                 if (leftType == LangType.String)
                 {
-                    throw new Exception("Strings are not supported");
+                    _diagnostics.ReportError(
+                        binary.Span,
+                        $"Cannot compare Strings yet"
+                        );
                 }
 
                 return LangType.Bool;
             default:
-                throw new Exception($"Unknown operator {binary.Operator}");
+                _diagnostics.ReportError(
+                    binary.Span,
+                    $"Unknown operator {binary.Operator}"
+                );
+                return LangType.Error;
         }
     }
 

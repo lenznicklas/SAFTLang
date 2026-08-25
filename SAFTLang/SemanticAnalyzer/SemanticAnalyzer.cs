@@ -86,10 +86,10 @@ public partial class SemanticAnalyzer
                 statement,
                 out LangType type))
         {
-            throw new Exception(
-                $"No type information for statement " +
-                $"'{statement.GetType().Name}'"
-            );
+            _diagnostics.ReportError(
+                statement.Span,
+                $"No type information for statement '{statement.GetType().Name}'"
+                );
         }
 
         return type;
