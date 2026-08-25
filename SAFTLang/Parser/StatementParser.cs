@@ -1,5 +1,6 @@
 using SAFTLang.Lexer;
 using SAFTLang.AST;
+using SAFTLang.SemanticAnalyzer.Symbols;
 
 namespace SAFTLang.Parser;
 
@@ -76,5 +77,5 @@ public partial class Parser
         BlockStatement block = new BlockStatement(statements);
         return block;
     }
-
+    
 }

@@ -1,4 +1,5 @@
 using SAFTLang.AST;
+using SAFTLang.SemanticAnalyzer.Symbols;
 
 namespace SAFTLang.SemanticAnalyzer;
 
@@ -46,14 +47,21 @@ public partial class SemanticAnalyzer
                 $"If condition must be Bool, got {conditionType}"
             );
         }
-        
+
+        BeginScope();
+
+        AnalyzeBlockStatement(statement.Body);
+    }
+
+    private void AnalyzeBlockStatement(BlockStatement block)
+    {
         BeginScope();
 
         try
         {
-            foreach (Statement bodyStatement in statement.Body)
+            foreach (Statement statement in block.Statements)
             {
-                AnalyzeStatement(bodyStatement);
+                AnalyzeStatement(statement);
             }
         }
         finally
@@ -62,4 +70,21 @@ public partial class SemanticAnalyzer
         }
     }
 
+    private void AnalyzeAssignmentStatement(AssignmentStatement statement)
+    {
+        VariableSymbol symbol = ResolveVariable(statement.Name);
+
+        if (symbol.IsConst)
+        {
+            throw new Exception($"Can't assign {symbol.Name} to const");
+        }
+
+        LangType valueType = AnalyzeExpression(statement.Value);
+
+        if (valueType != symbol.Type)
+        {
+            throw new Exception($"Can't assign {symbol.Name} to type {valueType}");
+        }
+    }
+    
 }

@@ -16,3 +16,4 @@ public record LetStatement(string Name, Expr Value) : Statement;
 public record ConstStatement(string Name, Expr Value) : Statement;
 public record IfStatement(Expr Condition, BlockStatement Body) : Statement;
 public record BlockStatement(List<Statement> Statements) : Statement;
+public record AssignmentStatement(string Name, Expr Value) : Statement;

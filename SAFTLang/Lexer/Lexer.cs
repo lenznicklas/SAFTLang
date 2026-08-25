@@ -1,48 +1,70 @@
-namespace SAFTLang.Lexer
-{
-    public record Token(TokenType Type, string Value);
+using System.Diagnostics.Tracing;
 
-    public class Lexer
+namespace SAFTLang.Lexer;
+    
+
+    public partial class Lexer
     {
         private readonly string _source;
         private int _position;
+        private int _line;
+        private int _column;
         private int _parenthesisDepth;
+        
         public Lexer(string source)
         {
             _source = source;
+            
             _position = 0;
+            _line = 1;
+            _column = 1;
+            _parenthesisDepth = 0;
         }
 
         public List<Token> Tokenize()
         {
             var tokens = new List<Token>();
-            
+
             while (!IsAtEnd())
             {
+                int tokenStart = _position;
+                int tokenLine = _line;
+                int tokenColumn = _column;
+
                 char c = Current();
-                
+
                 // Newline
                 if (c == '\n')
                 {
-                    if (_parenthesisDepth == 0)
-                    {
-                        tokens.Add(new Token(TokenType.Newline, "\\n"));
-                    }
-
                     while (!IsAtEnd() && Current() == '\n')
                     {
                         Advance();
                     }
+
+                    if (_parenthesisDepth == 0)
+                    {
+                        tokens.Add(
+                            CreateToken(
+                                TokenType.Newline,
+                                "\\n",
+                                tokenStart,
+                                _position - tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
+                    }
+
                     continue;
                 }
-                
+
                 // Other Whitespaces ignore
                 if (char.IsWhiteSpace(c))
                 {
                     Advance();
                     continue;
                 }
-                
+
                 // Number
                 if (char.IsDigit(c))
                 {
@@ -66,88 +88,212 @@ namespace SAFTLang.Lexer
                 switch (c)
                 {
                     case '+':
-                        tokens.Add(new Token(TokenType.Plus, "+"));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.Plus,
+                                "+",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn)
+                        );
                         break;
                     case '-':
-                        tokens.Add(new Token(TokenType.Minus, "-"));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.Minus,
+                                "-",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn)
+                        );
                         break;
                     case '*':
-                        tokens.Add(new Token(TokenType.Star, "*"));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.Star,
+                                "*",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
                         break;
                     case '/':
-                        tokens.Add(new Token(TokenType.Slash, "/"));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.Slash,
+                                "/",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
                         break;
                     case '=':
                         if (Peek() == '=')
                         {
-                            tokens.Add(new Token(TokenType.EqualEqual, "=="));
+                            tokens.Add(
+                                CreateSimpleToken(
+                                    TokenType.EqualEqual,
+                                    "==",
+                                    tokenStart,
+                                    tokenLine,
+                                    tokenColumn
+                                )
+                            );
                             Advance();
                         }
                         else
                         {
-                            tokens.Add(new Token(TokenType.Equal, "="));
+                            tokens.Add(
+                                CreateSimpleToken(
+                                    TokenType.Equal,
+                                    "=",
+                                    tokenStart,
+                                    tokenLine,
+                                    tokenColumn
+                                )
+                            );
                         }
+
                         break;
                     case ';':
-                        tokens.Add(new Token(TokenType.Semicolon, ";"));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.Semicolon,
+                                ";",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
                         break;
                     case '(':
-                        tokens.Add(new Token(TokenType.LParen, "("));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.LParen,
+                                "(",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
                         _parenthesisDepth++;
                         break;
                     case ')':
                         if (_parenthesisDepth == 0)
                         {
-                            throw new Exception("Unexpected closing parenthesis ')'");
+                            throw new Exception($"{tokenLine}:{tokenColumn}Unexpected closing parenthesis ')'");
                         }
-                        tokens.Add(new Token(TokenType.RParen, ")"));
 
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.RParen,
+                                ")",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
                         _parenthesisDepth--;
                         break;
-                    case '[':
-                        tokens.Add(new Token(TokenType.LBracket, "["));
-                        break;
-                    case ']':
-                        tokens.Add(new Token(TokenType.RBracket, "]"));
-                        break;
                     case '{':
-                        tokens.Add(new Token(TokenType.LBrace, "{"));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.LBrace,
+                                "{",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
                         break;
                     case '}':
-                        tokens.Add(new Token(TokenType.RBrace, "}"));
+                        tokens.Add(
+                            CreateSimpleToken(
+                                TokenType.LBrace,
+                                "}",
+                                tokenStart,
+                                tokenLine,
+                                tokenColumn
+                            )
+                        );
                         break;
                     case '<':
                         if (Peek() == '=')
                         {
-                            tokens.Add(new Token(TokenType.LessEqual, "<="));
+                            tokens.Add(
+                                CreateSimpleToken(
+                                    TokenType.LessEqual,
+                                    "<=",
+                                    tokenStart,
+                                    tokenLine,
+                                    tokenColumn
+                                )
+                            );
                             Advance();
                         }
                         else
                         {
-                            tokens.Add(new Token(TokenType.Less, "<"));
+                            tokens.Add(
+                                CreateSimpleToken(
+                                    TokenType.Less,
+                                    "<",
+                                    tokenStart,
+                                    tokenLine,
+                                    tokenColumn
+                                )
+                            );
                         }
+
                         break;
                     case '>':
                         if (Peek() == '=')
                         {
-                            tokens.Add(new Token(TokenType.GreaterEqual, ">="));
+                            tokens.Add(
+                                CreateSimpleToken(
+                                    TokenType.GreaterEqual,
+                                    ">=",
+                                    tokenStart,
+                                    tokenLine,
+                                    tokenColumn
+                                )
+                            );
                             Advance();
                         }
                         else
                         {
-                            tokens.Add(new Token(TokenType.Greater, ">"));
+                            tokens.Add(
+                                CreateSimpleToken(
+                                    TokenType.Greater,
+                                    ">",
+                                    tokenStart,
+                                    tokenLine,
+                                    tokenColumn
+                                )
+                            );
                         }
+
                         break;
                     case '!':
                         if (Peek() == '=')
                         {
-                            tokens.Add(new Token(TokenType.NotEqual, "!="));
+                            tokens.Add(
+                                CreateSimpleToken(
+                                    TokenType.NotEqual,
+                                    "!=",
+                                    tokenStart,
+                                    tokenLine,
+                                    tokenColumn
+                                )
+                            );
                             Advance();
                         }
                         else
                         {
                             throw new Exception($"Unexpected character {Current()}");
                         }
+
                         break;
                     default:
                         throw new Exception($"Unexpected character '{c}'");
@@ -157,99 +303,19 @@ namespace SAFTLang.Lexer
 
             }
 
-            tokens.Add(new Token(TokenType.EOF, ""));
+            tokens.Add(
+                new Token(
+                    TokenType.EOF,
+                    "",
+                    new SourceSpan(
+                        _position,
+                        0,
+                        _line,
+                        _column
+                    )
+                )
+            );
             return tokens;
         }
 
-        private Token ReadIdentifier()
-        {
-            int start = _position;
-
-            while (!IsAtEnd() && (char.IsLetterOrDigit(Current()) || Current() == '_'))
-            {
-                Advance();
-            }
-
-            string value = _source[start.._position];
-
-            switch (value)
-            {
-                case "let":
-                    return new Token(TokenType.Let, "let");
-                case "const":
-                    return new Token(TokenType.Const, "const");
-                case "true":
-                    return new Token(TokenType.True, "true");
-                case "false":
-                    return new Token(TokenType.False, "false");
-                case "if":
-                    return new Token(TokenType.If, "if");
-                case "string":
-                    return new Token(TokenType.StringType, "string");
-                case "int":
-                    return new Token(TokenType.IntType, "int");
-                case "bool":
-                    return new Token(TokenType.BoolType, "bool");
-            }
-
-            return new Token(TokenType.Identifier, value);
-        }
-
-        private Token ReadNumber()
-        {
-            int start = _position;
-
-            while (!IsAtEnd() && (char.IsDigit(Current()) || Current() == '_'))
-            {
-                Advance();
-            }
-
-            string value = _source[start.._position];
-            return new Token(TokenType.Number, value);
-        }
-
-        private Token ReadString()
-        {
-            Advance();
-            int start = _position;
-
-            while (!IsAtEnd() && Current() != '"')
-            {
-                Advance();
-            }
-
-            if (IsAtEnd())
-            {
-                throw new Exception($"Unexpected end of string");
-            }
-            string value = _source[start.._position];
-            Advance();
-            return new Token(TokenType.String, value);
-        }
-
-
-        private char Current()
-        {
-            return _source[_position];
-        }
-
-        private void Advance()
-        {
-            _position++;
-        }
-
-        private bool IsAtEnd()
-        {
-            return _position >= _source.Length;
-        }
-
-        private char Peek()
-        {
-            if (_position + 1 >= _source.Length)
-            {
-                return '\0';
-            }
-            return _source[_position + 1];
-        }
     }
-}

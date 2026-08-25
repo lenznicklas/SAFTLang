@@ -65,7 +65,9 @@ public class CodeGenerator
 
                 output.AppendLine($"{indentation}{{");
 
-                foreach (Statement bodyStatement in ifStatement.Body)
+                BlockStatement block = ifStatement.Body;
+                
+                foreach (Statement bodyStatement in block.Statements)
                 {
                     GenerateStatement(output, bodyStatement, indent + 1);
                 }

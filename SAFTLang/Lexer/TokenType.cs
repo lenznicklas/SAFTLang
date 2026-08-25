@@ -25,8 +25,6 @@ namespace SAFTLang.Lexer
         
         LParen,
         RParen,
-        LBracket,
-        RBracket,
         LBrace,
         RBrace,
         
