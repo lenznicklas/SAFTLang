@@ -58,6 +58,11 @@ public partial class SemanticAnalyzer
                     );
                 }
 
+                if (leftType == LangType.String)
+                {
+                    throw new Exception("Strings are not supported");
+                }
+
                 return LangType.Bool;
             default:
                 throw new Exception($"Unknown operator {binary.Operator}");
