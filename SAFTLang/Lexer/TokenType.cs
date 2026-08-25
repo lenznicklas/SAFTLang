@@ -36,4 +36,8 @@ namespace SAFTLang.Lexer
         LessEqual,
         Greater,
         GreaterEqual,
+        
+        BoolType,
+        IntType,
+        StringType,
     }}

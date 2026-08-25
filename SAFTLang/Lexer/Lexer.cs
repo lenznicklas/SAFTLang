@@ -184,6 +184,12 @@ namespace SAFTLang.Lexer
                     return new Token(TokenType.False, "false");
                 case "if":
                     return new Token(TokenType.If, "if");
+                case "string":
+                    return new Token(TokenType.StringType, "string");
+                case "int":
+                    return new Token(TokenType.IntType, "int");
+                case "bool":
+                    return new Token(TokenType.BoolType, "bool");
             }
 
             return new Token(TokenType.Identifier, value);
