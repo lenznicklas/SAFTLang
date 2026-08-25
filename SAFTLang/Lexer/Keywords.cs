@@ -13,5 +13,6 @@ public partial class Lexer
             ["int"] = TokenType.IntType,
             ["string"] = TokenType.StringType,
             ["bool"] = TokenType.BoolType,
+            ["else"] = TokenType.Else,
         };
 }

@@ -60,7 +60,12 @@ public partial class SemanticAnalyzer
             );
         }
         
-        AnalyzeBlockStatement(statement.Body);
+        AnalyzeBlockStatement(statement.thenBody);
+
+        if (statement.elseBody is not null)
+        {
+            AnalyzeBlockStatement(statement.elseBody);
+        }
     }
 
     private void AnalyzeBlockStatement(BlockStatement block)
@@ -99,7 +104,7 @@ public partial class SemanticAnalyzer
 
         LangType valueType = AnalyzeExpression(statement.Value);
 
-        if (valueType != LangType.Error)
+        if (valueType == LangType.Error)
         {
             return;
         }
@@ -108,7 +113,7 @@ public partial class SemanticAnalyzer
         {
             _diagnostics.ReportError(
                 statement.Value.Span,
-                $"Can't assign {valueType} to {symbol.Name} of type {valueType}"
+                $"Can't assign {valueType} to {symbol.Name} of type {symbol.Type}"
             );
         }
     }

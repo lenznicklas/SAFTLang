@@ -6,7 +6,7 @@ namespace SAFTLang.Parser;
 
 public partial class Parser
 {
-    private Statement ParseStatement()
+    private Statement? ParseStatement()
     {
 
         return Current().Type switch
@@ -15,10 +15,20 @@ public partial class Parser
             TokenType.Const => ParseConstStatement(),
             TokenType.If => ParseIfStatement(),
             TokenType.Identifier => ParseAssignmentStatement(),
-            _ => throw new Exception($"{Current().Span}: Unexpected token {Current().Type}"),
+            _ =>  UnexpectedTokenEx(Current()),
         };
     }
 
+    private Statement UnexpectedTokenEx(Token token)
+    {
+        _diagnostics.ReportError(
+            token.Span,
+            $"Unexpected token {token.Type} " +
+            $"('{token.Value}') at start of statement"
+            );
+        return null;
+    }
+    
     private Statement ParseLetStatement()
     {
         Token letToken = Consume(TokenType.Let);
@@ -59,11 +69,23 @@ public partial class Parser
 
         Expr condition = ParseExpression();
 
-        BlockStatement body = ParseBlock();
+        BlockStatement thenBody = ParseBlock();
 
-        SourceSpan span = SourceSpan.Combine(ifToken.Span, body.Span);
+        BlockStatement? elseBody = null;
         
-        return new IfStatement(condition, body, span);
+        SkipNewLines();
+
+        if (Current().Type == TokenType.Else)
+        {
+            Consume(TokenType.Else);
+            elseBody = ParseBlock();
+        }
+
+        SourceSpan lastSpan = elseBody?.Span ?? thenBody.Span;
+        
+        SourceSpan span = SourceSpan.Combine(ifToken.Span, lastSpan);
+
+        return new IfStatement(condition, thenBody, elseBody, span);
     }
 
     private BlockStatement ParseBlock()
@@ -76,7 +98,13 @@ public partial class Parser
 
         while (Current().Type != TokenType.RBrace && !IsAtEnd())
         {
-            statements.Add(ParseStatement());
+            Statement? statement = ParseStatement();
+
+            if (statement is not null)
+            {
+                statements.Add(statement);
+            }
+            
             SkipNewLines();
         }
 

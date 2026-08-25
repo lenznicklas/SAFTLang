@@ -135,8 +135,19 @@ public partial class Parser
             
             return expression;
         }
-        
-        throw new Exception($"{token.Span}: Expected expression, got {token.Type}");
+
+        _diagnostics.ReportError(
+            token.Span,
+            $"Expected expression, got " +
+            $"{token.Type} ('{token.Value}')"
+        );
+
+        if (token.Type != TokenType.EOF)
+        {
+            Advance();
+        }
+
+        return new ErrorExpr(token.Span);
     }
 
 }

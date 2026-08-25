@@ -8,6 +8,7 @@ namespace SAFTLang.Lexer
         Let,
         Const,
         If,
+        Else,
         
         True,
         False,

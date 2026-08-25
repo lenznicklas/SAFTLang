@@ -47,6 +47,7 @@ public partial class SemanticAnalyzer
                 span,
                 $"Variable '{name}' is already defined in this scope"
             );
+            return null;
         }
         
         var symbol = new VariableSymbol(name, type, isConst);
@@ -86,10 +87,10 @@ public partial class SemanticAnalyzer
                 statement,
                 out LangType type))
         {
-            _diagnostics.ReportError(
-                statement.Span,
-                $"No type information for statement '{statement.GetType().Name}'"
-                );
+            throw new InvalidOperationException(
+                $"Internal compiler error: no type information " +
+                $"for {statement.GetType().Name}"
+            );
         }
 
         return type;

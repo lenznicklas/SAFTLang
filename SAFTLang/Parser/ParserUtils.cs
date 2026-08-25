@@ -1,4 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using SAFTLang.Lexer;
+using SAFTLang.Lexer.Text;
 
 namespace SAFTLang.Parser;
 
@@ -17,32 +19,69 @@ public partial class Parser
             return;
         }
 
-        if (Current().Type == TokenType.Newline)
+        if (Current().Type == TokenType.Newline ||
+            Current().Type == TokenType.EOF ||
+            Current().Type == TokenType.RBrace)
         {
-            Advance();
+            if (Current().Type == TokenType.Newline)
+            {
+                Advance();
+            }
             return;
         }
 
-        if (Current().Type == TokenType.EOF)
-        {
-            return;
-        }
-
-        throw new Exception($"{Current().Span}: Expected ';' or newline");
+        Token token = Current();
+        
+        _diagnostics.ReportError(
+            token.Span,
+            $"Expected ';' or newline, got " +
+            $"{token.Type} ('{token.Value}')"
+            );
+        
+        SynchronizeStatement();
     }
 
     private Token Consume(TokenType type)
     {
         Token token = Current();
 
+        if (token.Type == type)
+        {
+            Advance();
+            return token;
+        }
+
         if (token.Type != type)
         {
-            throw new Exception($"{token.Span}: Unexpected token, expected {type}, got {token.Type}");
+            _diagnostics.ReportError(
+                token.Span,
+                $"Expected {type}, got " +
+                $"{token.Type} ('{token.Value}')"
+            );
         }
-        
-        Advance();
-        return token;
+
+        return CreateMissingToken(
+            type,
+            token
+        );
     }
+
+    private Token CreateMissingToken(TokenType type, Token token)
+    {
+        var span = new SourceSpan(
+            token.Span.Start,
+            0,
+            token.Span.Line,
+            token.Span.Column
+        );
+
+        return new Token(
+            type,
+            "",
+            span
+        );
+    }
+    
     private Token Current()
     {
         return _tokens[_position];
@@ -61,6 +100,23 @@ public partial class Parser
     private void SkipNewLines()
     {
         while (Current().Type == TokenType.Newline)
+        {
+            Advance();
+        }
+    }
+
+    private void SynchronizeStatement()
+    {
+        while (!IsAtEnd() &&
+               Current().Type != TokenType.Newline &&
+               Current().Type != TokenType.Semicolon &&
+               Current().Type != TokenType.RBrace)
+        {
+            Advance();
+        }
+
+        if (Current().Type == TokenType.Semicolon ||
+            Current().Type == TokenType.Newline)
         {
             Advance();
         }

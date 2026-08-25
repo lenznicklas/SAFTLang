@@ -4,6 +4,7 @@ namespace SAFTLang.AST;
 
 public record IfStatement(
     Expr Condition, 
-    BlockStatement Body,
+    BlockStatement thenBody,
+    BlockStatement? elseBody,
     SourceSpan Span
     ) : Statement(Span);

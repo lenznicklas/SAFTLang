@@ -21,6 +21,8 @@ public partial class SemanticAnalyzer
                 AnalyzeIdentifier(ident),
             BinaryExpr binary =>
                 AnalyzeBinary(binary),
+            ErrorExpr =>
+                LangType.Error,
             _ => ReportUnknownExpression(expr)
         
         };
@@ -48,18 +50,29 @@ public partial class SemanticAnalyzer
             case TokenType.Minus:
             case TokenType.Star:
             case TokenType.Slash:
-                RequireTypes(binary.Operator, leftType, rightType, LangType.Int, binary.Span);
+                if (!RequireTypes(binary.Operator, leftType, rightType, LangType.Int, binary.Span))
+                {
+                    return LangType.Error;
+                }
                 return LangType.Int;
 
             case TokenType.Less:
             case TokenType.Greater:
             case TokenType.LessEqual:
             case TokenType.GreaterEqual:
-                RequireTypes(binary.Operator, leftType, rightType, LangType.Int, binary.Span);
+                if (!RequireTypes(binary.Operator, leftType, rightType, LangType.Int, binary.Span))
+                {
+                    return LangType.Error;
+                }
                 return LangType.Bool;
 
             case TokenType.EqualEqual:
             case TokenType.NotEqual:
+                if (leftType == LangType.Error ||
+                    rightType == LangType.Error)
+                {
+                    return LangType.Error;
+                }
                 if (leftType != rightType)
                 {
                     _diagnostics.ReportError(

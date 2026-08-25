@@ -35,8 +35,17 @@ public partial class CodeGenerator
                 );
 
                 GenerateStatement(
-                    output, ifStatement.Body, indent
+                    output, ifStatement.thenBody, indent
                 );
+
+                if (ifStatement.elseBody is not null)
+                {
+                    output.AppendLine($"{indentation}else");
+
+                    GenerateStatement(
+                        output, ifStatement.elseBody, indent
+                    );
+                }
                 
                 break;
             case BlockStatement blockStatement:
