@@ -53,12 +53,12 @@ public partial class Parser
 
         Expr condition = ParseExpression();
 
-        List<Statement> body = ParseBlock();
+        BlockStatement body = ParseBlock();
 
         return new IfStatement(condition, body);
     }
 
-    private List<Statement> ParseBlock()
+    private BlockStatement ParseBlock()
     {
         Consume(TokenType.LBrace);
 
@@ -73,7 +73,8 @@ public partial class Parser
         }
 
         Consume(TokenType.RBrace);
-        return statements;
+        BlockStatement block = new BlockStatement(statements);
+        return block;
     }
 
 }
