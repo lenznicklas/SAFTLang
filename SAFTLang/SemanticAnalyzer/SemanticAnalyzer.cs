@@ -1,5 +1,7 @@
 using SAFTLang.Lexer;
 using SAFTLang.AST;
+using SAFTLang.Diagnostics;
+using SAFTLang.Lexer.Text;
 using SAFTLang.SemanticAnalyzer.Symbols;
 
 namespace SAFTLang.SemanticAnalyzer;
@@ -8,6 +10,10 @@ public partial class SemanticAnalyzer
 {
     private readonly Stack<Dictionary<string, VariableSymbol>> _scopes = new();
     private readonly Dictionary<Statement, LangType> _statementTypes = new();
+    private readonly DiagnosticBag _diagnostics = new();
+
+    public IReadOnlyList<Diagnostic> Diagnostics => _diagnostics.Diagnostics;
+    
     public SemanticAnalyzer()
     {
         _scopes.Push(new Dictionary<string, VariableSymbol>());
@@ -47,7 +53,7 @@ public partial class SemanticAnalyzer
         return symbol;
     }
 
-    private VariableSymbol ResolveVariable(string name)
+    private VariableSymbol? ResolveVariable(string name, SourceSpan span)
     {
         foreach (Dictionary<string, VariableSymbol> scope in _scopes)
         {
@@ -56,8 +62,13 @@ public partial class SemanticAnalyzer
                 return symbol;
             }
         }
-        
-        throw new Exception($"Variable '{name}' not found");
+
+        _diagnostics.ReportError(
+            span,
+            $"Unknown variable '{name}'"
+        );
+
+        return null;
     }
     public void Analyze(List<Statement> statements)
     {

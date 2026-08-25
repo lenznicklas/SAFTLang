@@ -26,7 +26,12 @@ public partial class SemanticAnalyzer
 
     private LangType AnalyzeIdentifier(IdentifierExpr ident)
     {
-        VariableSymbol symbol = ResolveVariable(ident.Name);
+        VariableSymbol? symbol = ResolveVariable(ident.Name, ident.Span);
+        if (symbol is null)
+        {
+            return LangType.Error;
+        }
+        
         return symbol.Type;
     }
 

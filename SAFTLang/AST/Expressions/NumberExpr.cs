@@ -1,5 +1,8 @@
+using SAFTLang.Lexer.Text;
+
 namespace SAFTLang.AST;
 
 public record NumberExpr(
-    string Value
-    ) : Expr;
+    string Value,
+    SourceSpan Span
+    ) : Expr(Span);

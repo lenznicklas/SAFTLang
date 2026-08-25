@@ -47,9 +47,11 @@ public partial class SemanticAnalyzer
     {
         LangType conditionType = AnalyzeExpression(statement.Condition);
 
-        if (conditionType != LangType.Bool)
+        if (conditionType != LangType.Bool &&
+            conditionType != LangType.Error)
         {
-            throw new Exception(
+            _diagnostics.ReportError(
+                statement.Condition.Span,
                 $"If condition must be Bool, got {conditionType}"
             );
         }
@@ -76,18 +78,24 @@ public partial class SemanticAnalyzer
 
     private void AnalyzeAssignmentStatement(AssignmentStatement statement)
     {
-        VariableSymbol symbol = ResolveVariable(statement.Name);
+        VariableSymbol? symbol = ResolveVariable(statement.Name, statement.Span);
 
         if (symbol.IsConst)
         {
-            throw new Exception($"Can't assign {symbol.Name} to const");
+            _diagnostics.ReportError(
+                statement.Span,
+                $"Can't assign {symbol.Name} to type const"
+            );
         }
 
         LangType valueType = AnalyzeExpression(statement.Value);
 
         if (valueType != symbol.Type)
         {
-            throw new Exception($"Can't assign {symbol.Name} to type {valueType}");
+            _diagnostics.ReportError(
+                statement.Span,
+                $"Can't assign {symbol.Name} to type {valueType}"
+            );
         }
     }
     

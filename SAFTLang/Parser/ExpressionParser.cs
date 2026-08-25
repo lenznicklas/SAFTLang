@@ -1,5 +1,6 @@
 using SAFTLang.AST;
 using SAFTLang.Lexer;
+using SAFTLang.Lexer.Text;
 
 namespace SAFTLang.Parser;
 
@@ -22,7 +23,7 @@ public partial class Parser
 
             Expr right = ParseComparison();
             
-            left = new BinaryExpr(left, op, right);
+            left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }
         
         return left;
@@ -40,7 +41,7 @@ public partial class Parser
             TokenType op = Current().Type;
             Advance();
             Expr right = ParseAddition();
-            left = new BinaryExpr(left, op, right);
+            left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }
         
         return left;
@@ -56,7 +57,7 @@ public partial class Parser
             Advance();
 
             Expr right = ParseMultiplication();
-            left = new BinaryExpr(left, op, right);
+            left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }
         return left;
     }
@@ -71,7 +72,7 @@ public partial class Parser
             Advance();
             Expr right = ParsePrimary();
             
-            left = new BinaryExpr(left, op, right);
+            left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }
         return left;
     }
@@ -83,31 +84,46 @@ public partial class Parser
         if (token.Type == TokenType.Number)
         {
             Advance();
-            return new NumberExpr(token.Value);
+            return new NumberExpr(
+                token.Value,
+                token.Span
+            );
         }
 
         if (token.Type == TokenType.True)
         {
             Advance();
-            return new BoolExpr(true);
+            return new BoolExpr(
+                true,
+                token.Span
+            );
         }
 
         if (token.Type == TokenType.False)
         {
             Advance();
-            return new BoolExpr(false);
+            return new BoolExpr(
+                false,
+                token.Span
+            );
         }
 
         if (token.Type == TokenType.String)
         {
             Advance();
-            return new StringExpr(token.Value);
+            return new StringExpr(
+                token.Value,
+                token.Span
+            );
         }
 
         if (token.Type == TokenType.Identifier)
         {
             Advance();
-            return new IdentifierExpr(token.Value);
+            return new IdentifierExpr(
+                token.Value,
+                token.Span
+            );
         }
 
         if (token.Type == TokenType.LParen)

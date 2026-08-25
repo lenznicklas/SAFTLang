@@ -1,5 +1,8 @@
+using SAFTLang.Lexer.Text;
+
 namespace SAFTLang.AST;
 
 public record BoolExpr(
-    bool Value
-    ) : Expr;
+    bool Value,
+    SourceSpan Span
+    ) : Expr(Span);

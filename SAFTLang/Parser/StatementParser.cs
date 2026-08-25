@@ -1,5 +1,6 @@
 using SAFTLang.Lexer;
 using SAFTLang.AST;
+using SAFTLang.Lexer.Text;
 
 namespace SAFTLang.Parser;
 
@@ -20,7 +21,7 @@ public partial class Parser
 
     private Statement ParseLetStatement()
     {
-        Consume(TokenType.Let);
+        Token letToken = Consume(TokenType.Let);
         
         Token name = Consume(TokenType.Identifier);
 
@@ -30,12 +31,14 @@ public partial class Parser
 
         ConsumeStatementEnd();
 
-        return new LetStatement(name.Value, value);
+        SourceSpan span = SourceSpan.Combine(letToken.Span, value.Span);
+
+        return new LetStatement(name.Value, value, span);
     }
 
     private Statement ParseConstStatement()
     {
-        Consume(TokenType.Const);
+        Token constToken = Consume(TokenType.Const);
 
         Token name = Consume(TokenType.Identifier);
 
@@ -45,23 +48,27 @@ public partial class Parser
         
         ConsumeStatementEnd();
         
-        return new ConstStatement(name.Value, value);
+        SourceSpan span =  SourceSpan.Combine(constToken.Span, value.Span);
+        
+        return new ConstStatement(name.Value, value, span);
     }
 
     private Statement ParseIfStatement()
     {
-        Consume(TokenType.If);
+        Token ifToken = Consume(TokenType.If);
 
         Expr condition = ParseExpression();
 
         BlockStatement body = ParseBlock();
 
-        return new IfStatement(condition, body);
+        SourceSpan span = SourceSpan.Combine(ifToken.Span, body.Span);
+        
+        return new IfStatement(condition, body, span);
     }
 
     private BlockStatement ParseBlock()
     {
-        Consume(TokenType.LBrace);
+        Token lBToken = Consume(TokenType.LBrace);
 
         SkipNewLines();
 
@@ -73,8 +80,11 @@ public partial class Parser
             SkipNewLines();
         }
 
-        Consume(TokenType.RBrace);
-        BlockStatement block = new BlockStatement(statements);
+        Token rBToken = Consume(TokenType.RBrace);
+        
+        SourceSpan span = SourceSpan.Combine(lBToken.Span, rBToken.Span);
+            
+        BlockStatement block = new BlockStatement(statements, span);
         return block;
     }
 
@@ -88,7 +98,9 @@ public partial class Parser
         
         ConsumeStatementEnd();
         
-        return new AssignmentStatement(name.Value, value);
+        SourceSpan span =  SourceSpan.Combine(name.Span, value.Span);
+        
+        return new AssignmentStatement(name.Value, value, span);
     }
     
 }
