@@ -5,28 +5,33 @@ namespace SAFTLang.SemanticAnalyzer;
 
 public partial class SemanticAnalyzer
 {
-    private readonly Stack<Dictionary<string, LangType>> _scopes = new();
+    private readonly Stack<Dictionary<string, VariableSymbol>> _scopes = new();
     private readonly Dictionary<Statement, LangType> _statementTypes = new();
     public SemanticAnalyzer()
     {
-        _scopes.Push(new Dictionary<string, LangType>());
+        _scopes.Push(new Dictionary<string, VariableSymbol>());
     }
 
     private void BeginScope()
     {
-        _scopes.Push(new Dictionary<string, LangType>());
+        _scopes.Push(new Dictionary<string, VariableSymbol>());
     }
 
     private void EndScope()
     {
+        if (_scopes.Count == 1)
+        {
+            throw new Exception("Cannot close global scope");
+        }
         _scopes.Pop();
     }
 
-    private void DeclareVariable(
+    private VariableSymbol DeclareVariable(
         string name,
-        LangType type)
+        LangType type,
+        bool isConst)
     {
-        Dictionary<string, LangType> currentScope = _scopes.Peek();
+        Dictionary<string, VariableSymbol> currentScope = _scopes.Peek();
 
         if (currentScope.ContainsKey(name))
         {
@@ -35,16 +40,19 @@ public partial class SemanticAnalyzer
             );
         }
         
-        currentScope.Add(name, type);
+        var symbol = new VariableSymbol(name, type, isConst);
+        
+        currentScope.Add(name, symbol);
+        return symbol;
     }
 
-    private LangType ResolveVariable(string name)
+    private VariableSymbol ResolveVariable(string name)
     {
-        foreach (Dictionary<string, LangType> scope in _scopes)
+        foreach (Dictionary<string, VariableSymbol> scope in _scopes)
         {
-            if (scope.TryGetValue(name, out LangType type))
+            if (scope.TryGetValue(name, out VariableSymbol? symbol))
             {
-                return type;
+                return symbol;
             }
         }
         

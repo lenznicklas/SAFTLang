@@ -25,14 +25,14 @@ public partial class SemanticAnalyzer
     private void AnalyzeLetStatement(LetStatement statement)
     {
         LangType type= AnalyzeExpression(statement.Value);
-        DeclareVariable(statement.Name, type);
+        DeclareVariable(statement.Name, type, isConst: false);
         _statementTypes[statement] = type;
     }
 
     private void AnalyzeConstStatement(ConstStatement statement)
     {
         LangType type = AnalyzeExpression(statement.Value);
-        DeclareVariable(statement.Name, type);
+        DeclareVariable(statement.Name, type, isConst:true);
         _statementTypes[statement] = type;
     }
 

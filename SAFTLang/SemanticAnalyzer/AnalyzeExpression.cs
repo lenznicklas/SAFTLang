@@ -25,7 +25,8 @@ public partial class SemanticAnalyzer
 
     private LangType AnalyzeIdentifier(IdentifierExpr ident)
     {
-        return ResolveVariable(ident.Name);
+        VariableSymbol symbol = ResolveVariable(ident.Name);
+        return symbol.Type;
     }
 
     private LangType AnalyzeBinary(BinaryExpr binary)
