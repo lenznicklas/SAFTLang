@@ -47,14 +47,14 @@ public class CodeGenerator
                 output.AppendLine(
                     $"{indentation}" +
                     $"{GenerateType(_analyzer.GetStatementType(let))} " +
-                    $"{let.Name} = {GenerateExpression(let.Value)};"
+                    $"{GenerateIdentifier(let.Name)} = {GenerateExpression(let.Value)};"
                 );
                 break;
             case ConstStatement constStatement:
                 output.AppendLine(
                     $"{indentation}const " +
                     $"{GenerateType(_analyzer.GetStatementType(constStatement))} " +
-                    $"{constStatement.Name} = {GenerateExpression(constStatement.Value)};"
+                    $"{GenerateIdentifier(constStatement.Name)} = {GenerateExpression(constStatement.Value)};"
                 );
                 break;
             case IfStatement ifStatement:
@@ -85,7 +85,7 @@ public class CodeGenerator
                 num.Value,
 
             IdentifierExpr ident =>
-                ident.Name,
+                GenerateIdentifier(ident.Name),
 
             BinaryExpr binary =>
                 GenerateBinaryExpression(binary),
@@ -142,5 +142,10 @@ public class CodeGenerator
         return str
             .Replace("\\", "\\\\")
             .Replace("\"", "\\\"");
+    }
+
+    private string GenerateIdentifier(string name)
+    {
+        return $"saft_{name}";
     }
 }
