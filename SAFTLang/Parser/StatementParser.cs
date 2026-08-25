@@ -1,6 +1,5 @@
 using SAFTLang.Lexer;
 using SAFTLang.AST;
-using SAFTLang.SemanticAnalyzer.Symbols;
 
 namespace SAFTLang.Parser;
 
