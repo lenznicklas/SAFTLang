@@ -51,14 +51,12 @@ public partial class Parser
             return token;
         }
 
-        if (token.Type != type)
-        {
-            _diagnostics.ReportError(
-                token.Span,
-                $"Expected {type}, got " +
-                $"{token.Type} ('{token.Value}')"
-            );
-        }
+        _diagnostics.ReportError(
+            token.Span,
+            $"Expected {type}, got " +
+            $"{token.Type} ('{token.Value}')"
+        );
+        
 
         return CreateMissingToken(
             type,
@@ -89,7 +87,10 @@ public partial class Parser
     
     private void Advance()
     {
-        _position++;
+        if (!IsAtEnd())
+        {
+            _position++;
+        }
     }
 
     private bool IsAtEnd()

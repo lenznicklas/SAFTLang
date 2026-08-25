@@ -15,17 +15,26 @@ public partial class Parser
             TokenType.Const => ParseConstStatement(),
             TokenType.If => ParseIfStatement(),
             TokenType.Identifier => ParseAssignmentStatement(),
-            _ =>  UnexpectedTokenEx(Current()),
+            _ =>  UnexpectedToken(Current())
         };
     }
 
-    private Statement UnexpectedTokenEx(Token token)
+    private Statement UnexpectedToken(Token token)
     {
         _diagnostics.ReportError(
             token.Span,
             $"Unexpected token {token.Type} " +
             $"('{token.Value}') at start of statement"
             );
+
+        int startPosition = _position;
+        
+        SynchronizeStatement();
+
+        if (_position == startPosition && !IsAtEnd())
+        {
+            Advance();
+        }
         return null;
     }
     

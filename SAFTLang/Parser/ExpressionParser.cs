@@ -142,7 +142,13 @@ public partial class Parser
             $"{token.Type} ('{token.Value}')"
         );
 
-        if (token.Type != TokenType.EOF)
+        bool isExpressionBoundary =
+            token.Type == TokenType.EOF ||
+            token.Type == TokenType.Newline ||
+            token.Type == TokenType.Semicolon ||
+            token.Type == TokenType.RBrace;
+
+        if (!isExpressionBoundary)
         {
             Advance();
         }
