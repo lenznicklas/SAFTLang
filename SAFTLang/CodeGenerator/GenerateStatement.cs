@@ -1,0 +1,76 @@
+using System.Text;
+using SAFTLang.AST;
+
+namespace SAFTLang.CodeGenerator;
+
+public partial class CodeGenerator
+{
+    private void GenerateStatement(
+        StringBuilder output,
+        Statement statement,
+        int indent)
+    {
+        string indentation = new string(' ', indent * 4);
+
+        switch (statement)
+        {
+            case LetStatement let:
+                output.AppendLine(
+                    $"{indentation}" +
+                    $"{GenerateType(_analyzer.GetStatementType(let))} " +
+                    $"{GenerateIdentifier(let.Name)} = {GenerateExpression(let.Value)};"
+                );
+                break;
+            case ConstStatement constStatement:
+                output.AppendLine(
+                    $"{indentation}const " +
+                    $"{GenerateType(_analyzer.GetStatementType(constStatement))} " +
+                    $"{GenerateIdentifier(constStatement.Name)} = {GenerateExpression(constStatement.Value)};"
+                );
+                break;
+            case IfStatement ifStatement:
+                output.AppendLine(
+                    $"{indentation}if " +
+                    $"({GenerateExpression(ifStatement.Condition)})"
+                );
+
+                GenerateStatement(
+                    output, statement, indent
+                );
+                
+                break;
+            case BlockStatement blockStatement:
+                GenerateBlockStatement(
+                    output,
+                    blockStatement,
+                    indent
+                );
+                break;
+            default:
+                throw new Exception($"Unknown statement {statement.GetType().Name}");
+        }
+    }
+
+    private void GenerateBlockStatement(
+        StringBuilder output,
+        BlockStatement block,
+        int indent
+    )
+    {
+        string indentation = new string(' ', indent * 4);
+
+        output.AppendLine($"{indentation}{{");
+
+        foreach (Statement statement in block.Statements)
+        {
+            GenerateStatement(
+                output,
+                statement,
+                indent + 1
+            );
+        }
+        
+        output.AppendLine($"{indentation}}}");
+    }
+
+}

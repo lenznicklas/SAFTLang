@@ -9,14 +9,20 @@ public partial class SemanticAnalyzer
     {
         switch (statement)
         {
-            case LetStatement let:
-                AnalyzeLetStatement(let);
+            case LetStatement stmt:
+                AnalyzeLetStatement(stmt);
                 break;
-            case ConstStatement _const:
-                AnalyzeConstStatement(_const);
+            case ConstStatement stmt:
+                AnalyzeConstStatement(stmt);
                 break;
-            case IfStatement _if:
-                AnalyzeIfStatement(_if);
+            case IfStatement stmt:
+                AnalyzeIfStatement(stmt);
+                break;
+            case BlockStatement stmt:
+                AnalyzeBlockStatement(stmt);
+                break;
+            case AssignmentStatement stmt:
+                AnalyzeAssignmentStatement(stmt);
                 break;
             default:
                 throw new Exception($"Unknown statement {statement.GetType().Name}");
@@ -47,9 +53,7 @@ public partial class SemanticAnalyzer
                 $"If condition must be Bool, got {conditionType}"
             );
         }
-
-        BeginScope();
-
+        
         AnalyzeBlockStatement(statement.Body);
     }
 

@@ -120,7 +120,7 @@ public partial class Parser
             return expression;
         }
         
-        throw new Exception($"Expected expression, got {token.Type}");
+        throw new Exception($"{token.Span}: Expected expression, got {token.Type}");
     }
 
 }

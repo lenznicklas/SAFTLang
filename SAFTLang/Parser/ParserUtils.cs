@@ -28,7 +28,7 @@ public partial class Parser
             return;
         }
 
-        throw new Exception("Expected ';' or newline");
+        throw new Exception($"{Current().Span}: Expected ';' or newline");
     }
 
     private Token Consume(TokenType type)
@@ -37,7 +37,7 @@ public partial class Parser
 
         if (token.Type != type)
         {
-            throw new Exception($"Unexpected token, expected {type}, got {token.Type}");
+            throw new Exception($"{token.Span}: Unexpected token, expected {type}, got {token.Type}");
         }
         
         Advance();

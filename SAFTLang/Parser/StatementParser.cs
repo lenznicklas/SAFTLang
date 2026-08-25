@@ -14,7 +14,7 @@ public partial class Parser
             TokenType.Let => ParseLetStatement(),
             TokenType.Const => ParseConstStatement(),
             TokenType.If => ParseIfStatement(),
-            _ => throw new Exception($"Unexpected token {Current().Type}"),
+            _ => throw new Exception($"{Current().Span}: Unexpected token {Current().Type}"),
         };
     }
 
