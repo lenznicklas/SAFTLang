@@ -1,4 +1,4 @@
-using System.Diagnostics.Tracing;
+using SAFTLang.Lexer.Text;
 
 namespace SAFTLang.Lexer;
     
@@ -303,6 +303,11 @@ namespace SAFTLang.Lexer;
 
             }
 
+            if (_parenthesisDepth != 0)
+            {
+                throw new Exception($"{_line}:{_column}: Unclosed parens");
+            }
+            
             tokens.Add(
                 new Token(
                     TokenType.EOF,

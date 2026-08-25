@@ -35,7 +35,7 @@ public partial class CodeGenerator
                 );
 
                 GenerateStatement(
-                    output, statement, indent
+                    output, ifStatement.Body, indent
                 );
                 
                 break;
@@ -44,6 +44,13 @@ public partial class CodeGenerator
                     output,
                     blockStatement,
                     indent
+                );
+                break;
+            case AssignmentStatement assignmentStatement:
+                output.AppendLine(
+                    $"{indentation}" +
+                    $"{GenerateIdentifier(assignmentStatement.Name)} = " +
+                    $"{GenerateExpression(assignmentStatement.Value)};"
                 );
                 break;
             default:

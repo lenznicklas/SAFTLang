@@ -1,3 +1,5 @@
+using SAFTLang.Lexer.Text;
+
 namespace SAFTLang.Lexer;
 
 public partial class Lexer

@@ -1,4 +1,4 @@
-namespace SAFTLang.Lexer;
+namespace SAFTLang.Lexer.Text;
 
 public record SourceSpan(
     int Start, 

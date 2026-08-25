@@ -14,6 +14,7 @@ public partial class Parser
             TokenType.Let => ParseLetStatement(),
             TokenType.Const => ParseConstStatement(),
             TokenType.If => ParseIfStatement(),
+            TokenType.Identifier => ParseAssignmentStatement(),
             _ => throw new Exception($"{Current().Span}: Unexpected token {Current().Type}"),
         };
     }
@@ -76,6 +77,19 @@ public partial class Parser
         Consume(TokenType.RBrace);
         BlockStatement block = new BlockStatement(statements);
         return block;
+    }
+
+    private Statement ParseAssignmentStatement()
+    {
+        Token name = Consume(TokenType.Identifier);
+
+        Consume(TokenType.Equal);
+
+        Expr value = ParseExpression();
+        
+        ConsumeStatementEnd();
+        
+        return new AssignmentStatement(name.Value, value);
     }
     
 }
