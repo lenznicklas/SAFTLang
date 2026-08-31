@@ -16,6 +16,16 @@
 
 ## (Current) Syntax
 
+### Main-Method
+
+You can only run code from your main method, which you (currently) need to have:
+
+```
+func main() void {
+  foo()
+}
+```
+
 ### Variable Declaration
 
 `let x = 1` ==> int
