@@ -20,6 +20,10 @@
 
 `let b2 = s < 1` ==> error
 
+Also possible as a constant instead of a changeable variable.
+
+`const pi = 5` ==> int
+
 ### If/Else
 
 ```
