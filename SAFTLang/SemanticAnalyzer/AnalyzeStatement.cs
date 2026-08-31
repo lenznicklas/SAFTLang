@@ -24,6 +24,9 @@ public partial class SemanticAnalyzer
             case AssignmentStatement stmt:
                 AnalyzeAssignmentStatement(stmt);
                 break;
+            case ExpressionStatement stmt:
+                AnalyzeExpression(stmt.Expression);
+                break;
             default:
                 _diagnostics.ReportError(
                     statement.Span,

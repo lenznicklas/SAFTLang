@@ -22,6 +22,7 @@ namespace SAFTLang.Lexer
 
         Equal,
         Semicolon,
+        Comma,
         Newline,
         
         LParen,

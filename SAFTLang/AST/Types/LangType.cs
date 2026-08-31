@@ -5,5 +5,6 @@ public enum LangType
     Int,
     Bool,
     String,
+    Void,
     Error
 }

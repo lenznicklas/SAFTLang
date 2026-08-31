@@ -21,6 +21,8 @@ public partial class SemanticAnalyzer
                 AnalyzeIdentifier(ident),
             BinaryExpr binary =>
                 AnalyzeBinary(binary),
+            CallExpr call =>
+                AnalyzeCall(call),
             ErrorExpr =>
                 LangType.Error,
             _ => ReportUnknownExpression(expr)
@@ -97,6 +99,43 @@ public partial class SemanticAnalyzer
                 );
                 return LangType.Error;
         }
+    }
+    
+    private LangType AnalyzeCall(CallExpr call)
+    {
+        if (call.Callee is not IdentifierExpr identifier)
+        {
+            _diagnostics.ReportError(
+                call.Callee.Span,
+                "Expression is not callable"
+            );
+
+            return LangType.Error;
+        }
+
+        if (identifier.Name != "print")
+        {
+            _diagnostics.ReportError(
+                identifier.Span,
+                $"Unknown function '{identifier.Name}'"
+            );
+
+            return LangType.Error;
+        }
+
+        if (call.Arguments.Count != 1)
+        {
+            _diagnostics.ReportError(
+                call.Span,
+                "Function 'print' expects exactly one argument"
+            );
+
+            return LangType.Error;
+        }
+
+        AnalyzeExpression(call.Arguments[0]);
+
+        return LangType.Void;
     }
 
     private bool RequireTypes(

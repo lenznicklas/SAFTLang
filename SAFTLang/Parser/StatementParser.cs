@@ -9,16 +9,32 @@ public partial class Parser
     private Statement? ParseStatement()
     {
 
+        
+        
         return Current().Type switch
         {
             TokenType.Let => ParseLetStatement(),
             TokenType.Const => ParseConstStatement(),
             TokenType.If => ParseIfStatement(),
-            TokenType.Identifier => ParseAssignmentStatement(),
+            TokenType.Identifier 
+                when Peek().Type == TokenType.Equal => 
+                ParseAssignmentStatement(),
             _ =>  UnexpectedToken(Current())
         };
     }
 
+    private Token Peek(int offset = 0)
+    {
+        int index = _position + offset;
+
+        if (index >= _tokens.Count)
+        {
+            return _tokens[^1];
+        }
+
+        return _tokens[index];
+    }
+    
     private Statement UnexpectedToken(Token token)
     {
         _diagnostics.ReportError(
@@ -138,6 +154,17 @@ public partial class Parser
         SourceSpan span =  SourceSpan.Combine(name.Span, value.Span);
         
         return new AssignmentStatement(name.Value, value, span);
+    }
+
+    private Statement ParseExpressionStatement()
+    {
+        Expr expr = ParseExpression();
+        ConsumeStatementEnd();
+
+        return new ExpressionStatement(
+            expr,
+            expr.Span
+        );
     }
     
 }

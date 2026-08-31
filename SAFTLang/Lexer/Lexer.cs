@@ -89,94 +89,48 @@ namespace SAFTLang.Lexer;
                 {
                     case '+':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.Plus,
-                                "+",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn)
+                            CreateSimpleToken(TokenType.Plus, "+", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
                     case '-':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.Minus,
-                                "-",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn)
+                            CreateSimpleToken(TokenType.Minus, "-", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
                     case '*':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.Star,
-                                "*",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn
-                            )
+                            CreateSimpleToken(TokenType.Star, "*", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
                     case '/':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.Slash,
-                                "/",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn
-                            )
+                            CreateSimpleToken(TokenType.Slash, "/", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
                     case '=':
                         if (Peek() == '=')
                         {
                             tokens.Add(
-                                CreateSimpleToken(
-                                    TokenType.EqualEqual,
-                                    "==",
-                                    tokenStart,
-                                    tokenLine,
-                                    tokenColumn
-                                )
+                                CreateSimpleToken(TokenType.EqualEqual, "==", tokenStart, tokenLine, tokenColumn)
                             );
                             Advance();
                         }
                         else
                         {
                             tokens.Add(
-                                CreateSimpleToken(
-                                    TokenType.Equal,
-                                    "=",
-                                    tokenStart,
-                                    tokenLine,
-                                    tokenColumn
-                                )
+                                CreateSimpleToken(TokenType.Equal, "=", tokenStart, tokenLine, tokenColumn)
                             );
                         }
 
                         break;
                     case ';':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.Semicolon,
-                                ";",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn
-                            )
+                            CreateSimpleToken(TokenType.Semicolon, ";", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
                     case '(':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.LParen,
-                                "(",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn
-                            )
+                            CreateSimpleToken(TokenType.LParen, "(", tokenStart, tokenLine, tokenColumn)
                         );
                         _parenthesisDepth++;
                         break;
@@ -187,62 +141,32 @@ namespace SAFTLang.Lexer;
                         }
 
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.RParen,
-                                ")",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn
-                            )
+                            CreateSimpleToken(TokenType.RParen, ")", tokenStart, tokenLine, tokenColumn)
                         );
                         _parenthesisDepth--;
                         break;
                     case '{':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.LBrace,
-                                "{",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn
-                            )
+                            CreateSimpleToken(TokenType.LBrace, "{", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
                     case '}':
                         tokens.Add(
-                            CreateSimpleToken(
-                                TokenType.RBrace,
-                                "}",
-                                tokenStart,
-                                tokenLine,
-                                tokenColumn
-                            )
+                            CreateSimpleToken(TokenType.RBrace, "}", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
                     case '<':
                         if (Peek() == '=')
                         {
                             tokens.Add(
-                                CreateSimpleToken(
-                                    TokenType.LessEqual,
-                                    "<=",
-                                    tokenStart,
-                                    tokenLine,
-                                    tokenColumn
-                                )
+                                CreateSimpleToken(TokenType.LessEqual, "<=", tokenStart, tokenLine, tokenColumn)
                             );
                             Advance();
                         }
                         else
                         {
                             tokens.Add(
-                                CreateSimpleToken(
-                                    TokenType.Less,
-                                    "<",
-                                    tokenStart,
-                                    tokenLine,
-                                    tokenColumn
-                                )
+                                CreateSimpleToken(TokenType.Less, "<", tokenStart, tokenLine, tokenColumn)
                             );
                         }
 
@@ -251,26 +175,14 @@ namespace SAFTLang.Lexer;
                         if (Peek() == '=')
                         {
                             tokens.Add(
-                                CreateSimpleToken(
-                                    TokenType.GreaterEqual,
-                                    ">=",
-                                    tokenStart,
-                                    tokenLine,
-                                    tokenColumn
-                                )
+                                CreateSimpleToken(TokenType.GreaterEqual, ">=", tokenStart, tokenLine, tokenColumn)
                             );
                             Advance();
                         }
                         else
                         {
                             tokens.Add(
-                                CreateSimpleToken(
-                                    TokenType.Greater,
-                                    ">",
-                                    tokenStart,
-                                    tokenLine,
-                                    tokenColumn
-                                )
+                                CreateSimpleToken(TokenType.Greater, ">", tokenStart, tokenLine, tokenColumn)
                             );
                         }
 
@@ -279,13 +191,7 @@ namespace SAFTLang.Lexer;
                         if (Peek() == '=')
                         {
                             tokens.Add(
-                                CreateSimpleToken(
-                                    TokenType.NotEqual,
-                                    "!=",
-                                    tokenStart,
-                                    tokenLine,
-                                    tokenColumn
-                                )
+                                CreateSimpleToken(TokenType.NotEqual, "!=", tokenStart, tokenLine, tokenColumn)
                             );
                             Advance();
                         }
@@ -295,8 +201,13 @@ namespace SAFTLang.Lexer;
                         }
 
                         break;
+                    case ',':
+                        tokens.Add(
+                            CreateSimpleToken(TokenType.Comma, ",", tokenStart, tokenLine, tokenColumn)
+                        );
+                        break;
                     default:
-                        throw new Exception($"Unexpected character '{c}'");
+                        throw new Exception($"{tokenLine}:{tokenColumn}: Unexpected character '{c}'");
                 }
 
                 Advance();
@@ -312,12 +223,7 @@ namespace SAFTLang.Lexer;
                 new Token(
                     TokenType.EOF,
                     "",
-                    new SourceSpan(
-                        _position,
-                        0,
-                        _line,
-                        _column
-                    )
+                    new SourceSpan(_position, 0, _line, _column)
                 )
             );
             return tokens;
