@@ -75,7 +75,7 @@ public partial class CodeGenerator
                 }
                 else
                 {
-                    output.AppendLine($"{indentation}return {returnStatement.Value};");
+                    output.AppendLine($"{indentation}return {GenerateExpression(returnStatement.Value)};");
                 }
                 break;
             default:
