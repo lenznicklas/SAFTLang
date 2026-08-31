@@ -14,5 +14,8 @@ public partial class Lexer
             ["string"] = TokenType.StringType,
             ["bool"] = TokenType.BoolType,
             ["else"] = TokenType.Else,
+            ["void"] = TokenType.VoidType,
+            ["return"] = TokenType.Return,
+            ["func"] = TokenType.Func,
         };
 }

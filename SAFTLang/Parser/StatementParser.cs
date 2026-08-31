@@ -19,6 +19,7 @@ public partial class Parser
             TokenType.Identifier
                 when Peek(1).Type == TokenType.Colon =>
                 ParseExpressionStatement(),
+            TokenType.Func => ParseFunctionStatement(),
             
             _ =>  UnexpectedToken(Current())
         };
@@ -169,27 +170,34 @@ public partial class Parser
         }
 
         Consume(TokenType.Colon);
+        
+        return ParseType();
+    }
 
-        Token typeToken = Current();
+    private LangType ParseType()
+    {
+        Token token = Current();
 
-        LangType type = typeToken.Type switch
+        LangType type = token.Type switch
         {
             TokenType.IntType => LangType.Int,
-            TokenType.StringType => LangType.String,
             TokenType.BoolType => LangType.Bool,
-
-            _ => LangType.Error,
+            TokenType.StringType => LangType.String,
+            TokenType.VoidType => LangType.Void,
+            _ => LangType.Error
         };
 
         if (type == LangType.Error)
         {
-            _diagnostics.ReportError(
-                typeToken.Span,
-                $"Expected Type, got {typeToken.Type}");
+            _diagnostics.ReportError(token.Span,
+                $"Expected Type, got {token.Type}"
+            );
+
             return LangType.Error;
         }
-        Advance();
         
+        Advance();
+
         return type;
     }
 
@@ -202,6 +210,55 @@ public partial class Parser
             expr,
             expr.Span
         );
+    }
+
+    private Statement ParseFunctionStatement()
+    {
+        Token funcToken = Consume(TokenType.Func);
+        
+        Token name = Consume(TokenType.Identifier);
+
+        Consume(TokenType.LParen);
+        
+        var parameters = new List<Parameter>();
+
+        if (Current().Type != TokenType.RParen)
+        {
+            while (true)
+            {
+                Token parameterName = Consume(TokenType.Identifier);
+
+                Consume(TokenType.Colon);
+
+                LangType parameterType = ParseType();
+
+                parameters.Add(new Parameter(parameterName.Value, parameterType, parameterName.Span));
+
+                if (Current().Type != TokenType.Comma)
+                {
+                    break;
+                }
+
+                Consume(TokenType.Comma);
+            }
+        }
+
+        Consume(TokenType.RParen);
+            
+        LangType returnType = ParseType();
+            
+        BlockStatement body = ParseBlock();
+
+        SourceSpan span = SourceSpan.Combine(funcToken.Span, body.Span);
+
+        return new FunctionStatement(
+            name.Value,
+            parameters,
+            returnType,
+            body,
+            span
+        );
+
     }
     
 }

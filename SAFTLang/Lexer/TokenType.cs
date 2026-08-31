@@ -9,6 +9,8 @@ namespace SAFTLang.Lexer
         Const,
         If,
         Else,
+        Func,
+        Return,
         
         True,
         False,
@@ -42,4 +44,5 @@ namespace SAFTLang.Lexer
         BoolType,
         IntType,
         StringType,
+        VoidType,
     }}
