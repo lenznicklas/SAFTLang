@@ -48,7 +48,7 @@ public partial class SemanticAnalyzer
         } 
         else if (declaredType != valueType)
         {
-            _diagnostics.ReportError(statement.Span, $"Expected {valueType} to be declared {declaredType}");
+            _diagnostics.ReportError(statement.Span, $"Expected {valueType} to be declared as {valueType}, not {declaredType}");
         }
     }
 

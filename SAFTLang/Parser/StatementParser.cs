@@ -8,16 +8,13 @@ public partial class Parser
 {
     private Statement? ParseStatement()
     {
-
-        
-        
         return Current().Type switch
         {
             TokenType.Let => ParseLetStatement(),
             TokenType.Const => ParseConstStatement(),
             TokenType.If => ParseIfStatement(),
             TokenType.Identifier 
-                when Peek().Type == TokenType.Equal => 
+                when Peek(1).Type == TokenType.Equal => 
                 ParseAssignmentStatement(),
             _ =>  UnexpectedToken(Current())
         };

@@ -10,8 +10,8 @@ class Program
     static void Main(string[] args)
     {
         string source = """
-                        let x: int = "text"
-                        x = 4
+                        let x: int = 5
+                        x = true
                         """;
 
         // Lexer
