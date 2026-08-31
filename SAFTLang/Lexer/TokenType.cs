@@ -14,6 +14,8 @@ namespace SAFTLang.Lexer
         False,
         
         Number,
+        
+        Colon,
 
         Plus,
         Minus,

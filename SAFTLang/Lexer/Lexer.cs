@@ -128,6 +128,11 @@ namespace SAFTLang.Lexer;
                             CreateSimpleToken(TokenType.Semicolon, ";", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
+                    case ':':
+                        tokens.Add(
+                            CreateSimpleToken(TokenType.Colon, ":", tokenStart, tokenLine, tokenColumn)
+                        );
+                        break;
                     case '(':
                         tokens.Add(
                             CreateSimpleToken(TokenType.LParen, "(", tokenStart, tokenLine, tokenColumn)

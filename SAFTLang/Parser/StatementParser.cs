@@ -60,6 +60,8 @@ public partial class Parser
         
         Token name = Consume(TokenType.Identifier);
 
+        LangType? type = ParseOptionalType();
+
         Consume(TokenType.Equal);
 
         Expr value = ParseExpression();
@@ -68,7 +70,7 @@ public partial class Parser
 
         SourceSpan span = SourceSpan.Combine(letToken.Span, value.Span);
 
-        return new LetStatement(name.Value, value, span);
+        return new LetStatement(name.Value, type, value, span);
     }
 
     private Statement ParseConstStatement()
@@ -77,6 +79,8 @@ public partial class Parser
 
         Token name = Consume(TokenType.Identifier);
 
+        LangType? type = ParseOptionalType();
+        
         Consume(TokenType.Equal);
 
         Expr value = ParseExpression();
@@ -85,7 +89,7 @@ public partial class Parser
         
         SourceSpan span =  SourceSpan.Combine(constToken.Span, value.Span);
         
-        return new ConstStatement(name.Value, value, span);
+        return new ConstStatement(name.Value, type, value, span);
     }
 
     private Statement ParseIfStatement()
@@ -154,6 +158,38 @@ public partial class Parser
         SourceSpan span =  SourceSpan.Combine(name.Span, value.Span);
         
         return new AssignmentStatement(name.Value, value, span);
+    }
+
+    private LangType? ParseOptionalType()
+    {
+        if (Current().Type != TokenType.Colon)
+        {
+            return null;
+        }
+
+        Consume(TokenType.Colon);
+
+        Token typeToken = Current();
+
+        LangType type = typeToken.Type switch
+        {
+            TokenType.IntType => LangType.Int,
+            TokenType.StringType => LangType.String,
+            TokenType.BoolType => LangType.Bool,
+
+            _ => LangType.Error,
+        };
+
+        if (type == LangType.Error)
+        {
+            _diagnostics.ReportError(
+                typeToken.Span,
+                $"Expected Type, got {typeToken.Type}");
+            return LangType.Error;
+        }
+        Advance();
+        
+        return type;
     }
 
     private Statement ParseExpressionStatement()

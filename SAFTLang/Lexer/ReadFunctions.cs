@@ -11,7 +11,7 @@ public partial class Lexer
         while (!IsAtEnd() && (char.IsLetterOrDigit(Current()) || Current() == '_'))
         {
             Advance();
-        }
+        } 
 
         string value = _source[start.._position];
 
@@ -30,7 +30,7 @@ public partial class Lexer
             column
         );
     }
-
+    
     private Token ReadNumber()
     {
         int start = _position;

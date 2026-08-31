@@ -38,9 +38,18 @@ public partial class SemanticAnalyzer
 
     private void AnalyzeLetStatement(LetStatement statement)
     {
-        LangType type= AnalyzeExpression(statement.Value);
-        DeclareVariable(statement.Name, type, isConst: false, statement.Span);
-        _statementTypes[statement] = type;
+        LangType? declaredType = statement.DeclaredType;
+        LangType valueType = AnalyzeExpression(statement.Value);
+        
+        if (declaredType is null || declaredType == valueType)
+        {
+            DeclareVariable(statement.Name, valueType, isConst: false, statement.Span);
+            _statementTypes[statement] = valueType;
+        } 
+        else if (declaredType != valueType)
+        {
+            _diagnostics.ReportError(statement.Span, $"Expected {valueType} to be declared {declaredType}");
+        }
     }
 
     private void AnalyzeConstStatement(ConstStatement statement)
