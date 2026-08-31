@@ -1,53 +1,46 @@
-﻿using SAFTLang.Lexer;
-using SAFTLang.Parser;
-using SAFTLang.SemanticAnalyzer;
-using SAFTLang.CodeGenerator;
-using SAFTLang.AST;
-using SAFTLang.Diagnostics;
+﻿namespace SAFTLang;
 
-class Program
+internal static class Program
 {
-    static void Main(string[] args)
+    private static int Main(string[] args)
     {
-        string source = """
-                        print("hello world")
-                        """;
-
-        // Lexer
-        var lexer = new Lexer(source);
-        List<Token> tokens = lexer.Tokenize();
-
-        // Parser
-        var parser = new Parser(tokens);
-        List<Statement> statements = parser.Parse();
-
-        foreach (Diagnostic diagnostic in parser.Diagnostics)
+        if (args.Length < 2)
         {
-            Console.Error.WriteLine(diagnostic);
+            PrintHelp();
+            return 1;
         }
 
-        if (parser.HasErrors)
+        string command = args[0];
+        string sourceFile = args[1];
+
+        return command switch
         {
-            return;
-        }
+            "build" => Cli.Build(sourceFile),
+            "run" => Cli.Run(sourceFile),
 
-        // Semantic Analysis
-        var analyzer = new SemanticAnalyzer();
-        analyzer.Analyze(statements);
+            _ => UnknownCommand(command)
+        };
+    }
 
-        if (analyzer.Diagnostics.Count > 0)
-        {
-            foreach (Diagnostic diagnostic in analyzer.Diagnostics)
-            {
-                Console.Error.WriteLine(diagnostic);
-            }
-            return;
-        }
+    private static int UnknownCommand(string command)
+    {
+        Console.Error.WriteLine(
+            $"Unknown command '{command}'"
+        );
 
-        // C Code Generation
-        var generator = new CodeGenerator(analyzer);
-        string cCode = generator.Generate(statements);
+        PrintHelp();
 
-        Console.WriteLine(cCode);
+        return 1;
+    }
+
+    private static void PrintHelp()
+    {
+        Console.WriteLine("""
+                          SAFTLang Compiler
+
+                          Usage:
+                            saft build <file.sft>
+                            saft run   <file.sft>
+                          """);
     }
 }

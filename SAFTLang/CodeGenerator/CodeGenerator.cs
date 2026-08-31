@@ -20,11 +20,28 @@ public partial class CodeGenerator
         output.AppendLine("#include <stdio.h>");
         output.AppendLine("#include <stdbool.h>");
         output.AppendLine();
+        
+        List<FunctionStatement> functions = statements.OfType<FunctionStatement>().ToList();
+
+        foreach (FunctionStatement function in functions)
+        {
+            GenerateFunctionPrototype(output, function);
+        }
+
+        if (functions.Count > 0)
+        {
+            output.AppendLine();
+        }
+        
         output.AppendLine("int main(void)");
         output.AppendLine("{");
 
         foreach (var statement in statements)
         {
+            if (statement is FunctionStatement)
+            {
+                continue;
+            }
             GenerateStatement(output, statement, 1);
         }
         

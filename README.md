@@ -1,6 +1,12 @@
 # SAFTLang
 `Static And Fully Typed`
 
+## CLI-Usage
+
+`saft build <file.sft>`
+
+`saft run   <file.sft>`
+
 ## Types
 `bool`
 `int`
