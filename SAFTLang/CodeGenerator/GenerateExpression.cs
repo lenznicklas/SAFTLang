@@ -9,7 +9,7 @@ public partial class CodeGenerator
     {
         return expr switch
         {
-            NumberExpr num =>
+            IntegerExpr num =>
                 num.Value,
 
             IdentifierExpr ident =>
@@ -59,14 +59,40 @@ public partial class CodeGenerator
 
     private string GenerateCallExpression(CallExpr call)
     {
-        string callee = GenerateExpression(call.Callee);
+        string callee;
 
+        if (call.Callee is IdentifierExpr ident &&
+            ident.Name == "print")
+        {
+            return GeneratePrintCall(call);
+        }
+        else
+        {
+            callee = GenerateExpression(call.Callee);
+        }
+        
         string arguments = string.Join(
             ", ",
             call.Arguments.Select(GenerateExpression)
         );
         
         return $"{callee}({arguments})";
+    }
+
+    private string GeneratePrintCall(CallExpr call)
+    {
+        Expr expr = call.Arguments[0];
+
+        return expr switch
+        {
+            BoolExpr => $"printf(\"%s\", {GenerateExpression(expr)} ? \"true\" : \"false\")",
+            
+            StringExpr => $"printf(\"%s\", {GenerateExpression(expr)})",
+            
+            IntegerExpr => $"printf(\"%d\", {GenerateExpression(expr)})",
+            
+            _ => $"printf(\"%d\", {GenerateExpression(expr)})"
+        };
     }
 
 }

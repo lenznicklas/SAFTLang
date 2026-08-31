@@ -11,7 +11,7 @@ public partial class SemanticAnalyzer
     {
         return expr switch
         {
-            NumberExpr =>
+            IntegerExpr =>
                 LangType.Int,
             BoolExpr =>
                 LangType.Bool,

@@ -123,7 +123,7 @@ public partial class Parser
         if (token.Type == TokenType.Number)
         {
             Advance();
-            return new NumberExpr(
+            return new IntegerExpr(
                 token.Value,
                 token.Span
             );
