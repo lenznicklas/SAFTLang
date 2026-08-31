@@ -81,11 +81,17 @@ public partial class SemanticAnalyzer
     {
         foreach (Statement statement in statements)
         {
-            if (statement is FunctionStatement function)
+            if (statement is not FunctionStatement function)
+            {
+                _diagnostics.ReportError(statement.Span, "Only function declarations are allowed at top level");
+            }
+            else
             {
                 DeclareFunction(function);
             }
         }
+
+        ValidateMain(statements);
 
         foreach (Statement statement in statements)
         {

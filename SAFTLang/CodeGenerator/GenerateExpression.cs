@@ -85,13 +85,13 @@ public partial class CodeGenerator
 
         return expr switch
         {
-            BoolExpr => $"printf(\"%s\", {GenerateExpression(expr)} ? \"true\" : \"false\")",
+            BoolExpr => $"printf(\"%s\\n\", {GenerateExpression(expr)} ? \"true\" : \"false\")",
             
-            StringExpr => $"printf(\"%s\", {GenerateExpression(expr)})",
+            StringExpr => $"printf(\"%s\\n\", {GenerateExpression(expr)})",
             
-            IntegerExpr => $"printf(\"%d\", {GenerateExpression(expr)})",
+            IntegerExpr => $"printf(\"%d\\n\", {GenerateExpression(expr)})",
             
-            _ => $"printf(\"%d\", {GenerateExpression(expr)})"
+            _ => $"printf(\"%d\\n\", {GenerateExpression(expr)})"
         };
     }
 

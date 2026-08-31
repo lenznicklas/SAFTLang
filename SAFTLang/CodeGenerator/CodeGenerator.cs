@@ -40,16 +40,7 @@ public partial class CodeGenerator
         
         output.AppendLine("int main(void)");
         output.AppendLine("{");
-
-        foreach (var statement in statements)
-        {
-            if (statement is FunctionStatement)
-            {
-                continue;
-            }
-            GenerateStatement(output, statement, 1);
-        }
-        
+        output.AppendLine("    saft_main();");
         output.AppendLine();
         output.AppendLine("    return 0;");
         output.AppendLine("}");
