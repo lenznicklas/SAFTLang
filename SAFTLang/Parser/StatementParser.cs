@@ -16,6 +16,10 @@ public partial class Parser
             TokenType.Identifier 
                 when Peek(1).Type == TokenType.Equal => 
                 ParseAssignmentStatement(),
+            TokenType.Identifier
+                when Peek(1).Type == TokenType.Colon =>
+                ParseExpressionStatement(),
+            
             _ =>  UnexpectedToken(Current())
         };
     }

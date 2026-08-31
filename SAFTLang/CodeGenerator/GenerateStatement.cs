@@ -48,6 +48,12 @@ public partial class CodeGenerator
                 }
                 
                 break;
+            case ExpressionStatement expressionStatement:
+                output.AppendLine(
+                    $"{indentation}" +
+                    $"{GenerateExpression(expressionStatement.Expression)};"
+                );
+                break;
             case BlockStatement blockStatement:
                 GenerateBlockStatement(
                     output,

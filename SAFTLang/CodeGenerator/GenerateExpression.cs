@@ -23,6 +23,9 @@ public partial class CodeGenerator
             
             StringExpr str =>
                 $"\"{EscapeCString(str.Value)}\"",
+            
+            CallExpr call =>
+                GenerateCallExpression(call),
 
             _ => throw new Exception($"Unknown expression {expr.GetType().Name}")
         };
@@ -52,6 +55,18 @@ public partial class CodeGenerator
         };
         return $"({left} {op} {right})";
         
+    }
+
+    private string GenerateCallExpression(CallExpr call)
+    {
+        string callee = GenerateExpression(call.Callee);
+
+        string arguments = string.Join(
+            ", ",
+            call.Arguments.Select(GenerateExpression)
+        );
+        
+        return $"{callee}({arguments})";
     }
 
 }

@@ -10,8 +10,7 @@ class Program
     static void Main(string[] args)
     {
         string source = """
-                        let x: int = 5
-                        x = true
+                        print("hello world")
                         """;
 
         // Lexer
