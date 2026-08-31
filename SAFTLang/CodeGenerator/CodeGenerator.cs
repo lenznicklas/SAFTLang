@@ -32,6 +32,11 @@ public partial class CodeGenerator
         {
             output.AppendLine();
         }
+
+        foreach (FunctionStatement function in functions)
+        {
+            GenerateFunctionDefinition(output, function);
+        }
         
         output.AppendLine("int main(void)");
         output.AppendLine("{");
