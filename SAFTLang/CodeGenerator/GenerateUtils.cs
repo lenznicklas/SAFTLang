@@ -11,6 +11,7 @@ public partial class CodeGenerator
             LangType.Int => "int",
             LangType.Bool => "bool",
             LangType.String => "const char*",
+            LangType.Void => "void",
             _ => throw new Exception($"Unknown type {type.GetType().Name}")
         };
     }

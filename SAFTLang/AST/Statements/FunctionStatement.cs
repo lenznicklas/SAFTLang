@@ -5,8 +5,8 @@ namespace SAFTLang.AST;
 public record FunctionStatement
 (
     string Name, 
-    IReadOnlyList<Parameter> ParameterizedThreadStart,
+    IReadOnlyList<Parameter> Parameters,
     LangType ReturnType,
-    BlockStatement MethodBody,
+    BlockStatement Body,
     SourceSpan Span
 ) : Statement(Span);

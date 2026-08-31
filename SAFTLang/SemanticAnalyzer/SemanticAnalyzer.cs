@@ -9,6 +9,7 @@ namespace SAFTLang.SemanticAnalyzer;
 public partial class SemanticAnalyzer
 {
     private readonly Stack<Dictionary<string, VariableSymbol>> _scopes = new();
+    private readonly Dictionary<string, FunctionSymbol> _functions = new();
     private readonly Dictionary<Statement, LangType> _statementTypes = new();
     private readonly DiagnosticBag _diagnostics = new();
 
@@ -75,7 +76,15 @@ public partial class SemanticAnalyzer
     }
     public void Analyze(List<Statement> statements)
     {
-        foreach (var statement in statements)
+        foreach (Statement statement in statements)
+        {
+            if (statement is FunctionStatement function)
+            {
+                DeclareFunction(function);
+            }
+        }
+
+        foreach (Statement statement in statements)
         {
             AnalyzeStatement(statement);
         }
@@ -94,6 +103,45 @@ public partial class SemanticAnalyzer
         }
 
         return type;
+    }
+
+    private void DeclareFunction(FunctionStatement function)
+    {
+        if (_functions.ContainsKey(function.Name))
+        {
+            _diagnostics.ReportError(function.Span,
+                $"Function '{function.Name}' is already defined"
+            );
+            
+            return;
+        }
+
+        var symbol = new FunctionSymbol(
+            function.Name,
+            function.Parameters
+                .Select(parameter => parameter.Type)
+                .ToList(),
+            function.ReturnType
+        );
+        
+        _functions.Add(function.Name, symbol);
+    }
+
+    private FunctionSymbol? ResolveFunction(string name, SourceSpan span)
+    {
+        if (_functions.TryGetValue(
+                name,
+                out FunctionSymbol? function))
+        {
+            return function;
+        }
+
+        _diagnostics.ReportError(
+            span,
+            $"Unknown function '{name}'"
+        );
+
+        return null;
     }
 
 

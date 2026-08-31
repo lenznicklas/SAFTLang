@@ -27,6 +27,9 @@ public partial class SemanticAnalyzer
             case ExpressionStatement stmt:
                 AnalyzeExpression(stmt.Expression);
                 break;
+            case FunctionStatement stmt:
+                AnalyzeFunctionStatement(stmt);
+                break;
             default:
                 _diagnostics.ReportError(
                     statement.Span,
@@ -127,6 +130,34 @@ public partial class SemanticAnalyzer
                 statement.Value.Span,
                 $"Can't assign {valueType} to {symbol.Name} of type {symbol.Type}"
             );
+        }
+    }
+
+    private void AnalyzeFunctionStatement(
+        FunctionStatement functionStatement)
+    {
+        BeginScope();
+
+        try
+        {
+            foreach (Parameter parameter in functionStatement.Parameters)
+            {
+                DeclareVariable(
+                    parameter.Name,
+                    parameter.Type,
+                    isConst: false,
+                    parameter.Span
+                );
+            }
+
+            foreach (Statement statement in functionStatement.Body.Statements)
+            {
+                AnalyzeStatement(statement);
+            }
+        }
+        finally
+        {
+            EndScope();
         }
     }
     

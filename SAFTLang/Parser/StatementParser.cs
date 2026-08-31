@@ -17,7 +17,7 @@ public partial class Parser
                 when Peek(1).Type == TokenType.Equal => 
                 ParseAssignmentStatement(),
             TokenType.Identifier
-                when Peek(1).Type == TokenType.Colon =>
+                when Peek(1).Type == TokenType.LParen =>
                 ParseExpressionStatement(),
             TokenType.Func => ParseFunctionStatement(),
             

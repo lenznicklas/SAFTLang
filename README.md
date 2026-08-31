@@ -39,3 +39,21 @@ if x > 10 {
   foo2()
 }
 ```
+
+### Functions
+
+```
+func foo(x: int, y: string) void {
+  doSomething();
+}
+```
+
+If there is a return type, as an example a Integer, then:
+
+``` 
+func foo() int {
+  doSomethingAgain();
+}
+```
+
+You can call a function by simply using: `foo()`

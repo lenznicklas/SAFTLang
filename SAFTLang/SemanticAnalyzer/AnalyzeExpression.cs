@@ -113,29 +113,59 @@ public partial class SemanticAnalyzer
             return LangType.Error;
         }
 
-        if (identifier.Name != "print")
+        if (identifier.Name == "print")
         {
-            _diagnostics.ReportError(
-                identifier.Span,
-                $"Unknown function '{identifier.Name}'"
-            );
+            if (call.Arguments.Count != 1)
+            {
+                _diagnostics.ReportError(
+                    call.Span,
+                    $"Function 'print' expects exactly one argument"
+                );
 
-            return LangType.Error;
+                return LangType.Error;
+            }
+
+            AnalyzeExpression(call.Arguments[0]);
+            
+            return LangType.Void;
         }
 
-        if (call.Arguments.Count != 1)
+        FunctionSymbol? function = ResolveFunction(identifier.Name, identifier.Span);
+
+        if (function is null)
+        {
+            return LangType.Error;
+        }
+        
+        if (call.Arguments.Count != function.ParameterTypes.Count)
         {
             _diagnostics.ReportError(
                 call.Span,
-                "Function 'print' expects exactly one argument"
+                $"Function '{function.Name}' expects  argument"
             );
 
             return LangType.Error;
         }
 
-        AnalyzeExpression(call.Arguments[0]);
+        for (int i = 0; i < call.Arguments.Count; i++)
+        {
+            Expr argument = call.Arguments[i];
 
-        return LangType.Void;
+            LangType actualType = AnalyzeExpression(argument);
+            
+            LangType expectedType = function.ParameterTypes[i];
+
+            if (actualType != LangType.Error &&
+                actualType != expectedType)
+            {
+                _diagnostics.ReportError(
+                    argument.Span,
+                    $"Argument {i + 1} of function '{function.Name}' expects {expectedType} but got {actualType}"
+                );
+            }
+        }
+        
+        return function.ReturnType;
     }
 
     private bool RequireTypes(
