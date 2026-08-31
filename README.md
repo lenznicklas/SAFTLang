@@ -22,7 +22,13 @@
 
 Also possible as a constant instead of a changeable variable.
 
-`const pi = 5` ==> int
+`const pi = 5`
+
+Explicit typing is also possible:
+
+`let x: int = 5`
+
+`let y: int = "Hello World"` ==> error
 
 ### If/Else
 
