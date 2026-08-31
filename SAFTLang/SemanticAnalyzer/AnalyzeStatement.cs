@@ -161,6 +161,15 @@ public partial class SemanticAnalyzer
             {
                 AnalyzeStatement(statement);
             }
+
+            if (functionStatement.ReturnType != LangType.Void &&
+                !AlwaysReturns(functionStatement.Body))
+            {
+                _diagnostics.ReportError(
+                    functionStatement.Span,
+                    $"'{functionStatement.Name}' has to return a value of type {functionStatement.ReturnType}"
+                );
+            }
         }
         finally
         {
