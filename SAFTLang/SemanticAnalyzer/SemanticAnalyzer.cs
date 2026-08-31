@@ -10,6 +10,9 @@ public partial class SemanticAnalyzer
 {
     private readonly Stack<Dictionary<string, VariableSymbol>> _scopes = new();
     private readonly Dictionary<string, FunctionSymbol> _functions = new();
+
+    private FunctionStatement? _currentFunction;
+    
     private readonly Dictionary<Statement, LangType> _statementTypes = new();
     private readonly DiagnosticBag _diagnostics = new();
 

@@ -30,6 +30,9 @@ public partial class SemanticAnalyzer
             case FunctionStatement stmt:
                 AnalyzeFunctionStatement(stmt);
                 break;
+            case ReturnStatement stmt:
+                AnalyzeReturnStatement(stmt);
+                break;
             default:
                 _diagnostics.ReportError(
                     statement.Span,
@@ -136,6 +139,10 @@ public partial class SemanticAnalyzer
     private void AnalyzeFunctionStatement(
         FunctionStatement functionStatement)
     {
+        FunctionStatement? previousFunction = _currentFunction;
+        
+        _currentFunction = functionStatement;
+        
         BeginScope();
 
         try
@@ -158,6 +165,62 @@ public partial class SemanticAnalyzer
         finally
         {
             EndScope();
+
+            _currentFunction = previousFunction;
+        }
+    }
+
+    private void AnalyzeReturnStatement(ReturnStatement statement)
+    {
+        if (_currentFunction is null)
+        {
+            _diagnostics.ReportError(
+                statement.Span,
+                "Return statement is only allowed inside a function"
+            );
+            
+            return;
+        }
+
+        LangType expectedType = _currentFunction.ReturnType;
+
+        if (expectedType == LangType.Void)
+        {
+            if (statement.Value is not null)
+            {
+                AnalyzeExpression(statement.Value);
+                _diagnostics.ReportError(
+                    statement.Span,
+                    $"Void func '{_currentFunction.Name}' cannot return a value"
+                );
+            }
+            
+            return;
+        }
+
+        if (statement.Value is null)
+        {
+            _diagnostics.ReportError(
+                statement.Span,
+                $"Function '{_currentFunction.Name}' has to return a value of type {expectedType}"
+            );
+            
+            return;
+        }
+
+        LangType actualType = AnalyzeExpression(statement.Value);
+
+        if (actualType == LangType.Error)
+        {
+            return;
+        }
+
+        if (actualType != expectedType)
+        {
+            _diagnostics.ReportError(
+                statement.Span,
+                $"Expected func '{_currentFunction.Name}' to return a value of {expectedType} not {actualType}"
+            );
         }
     }
     

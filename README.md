@@ -58,7 +58,8 @@ If there is a return type, as an example a Integer, then:
 
 ``` 
 func foo() int {
-  doSomethingAgain();
+  let x: int = 67
+  return x
 }
 ```
 

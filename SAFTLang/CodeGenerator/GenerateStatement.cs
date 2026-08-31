@@ -68,6 +68,16 @@ public partial class CodeGenerator
                     $"{GenerateExpression(assignmentStatement.Value)};"
                 );
                 break;
+            case ReturnStatement returnStatement:
+                if (returnStatement.Value is null)
+                {
+                    output.AppendLine($"{indentation}return;");
+                }
+                else
+                {
+                    output.AppendLine($"{indentation}return {returnStatement.Value};");
+                }
+                break;
             default:
                 throw new Exception($"Unknown statement {statement.GetType().Name}");
         }

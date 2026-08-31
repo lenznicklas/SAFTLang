@@ -279,6 +279,8 @@ public partial class Parser
             value = ParseExpression();
         }
         
+        ConsumeStatementEnd();
+        
         return new ReturnStatement(value,  returnToken.Span);
     }
     
