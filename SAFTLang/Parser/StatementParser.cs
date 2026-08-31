@@ -20,6 +20,7 @@ public partial class Parser
                 when Peek(1).Type == TokenType.LParen =>
                 ParseExpressionStatement(),
             TokenType.Func => ParseFunctionStatement(),
+            TokenType.Return => ParseReturnStatement(),
             
             _ =>  UnexpectedToken(Current())
         };
@@ -259,6 +260,26 @@ public partial class Parser
             span
         );
 
+    }
+
+    private Statement ParseReturnStatement()
+    {
+        Token returnToken = Consume(TokenType.Return);
+
+        Expr? value = null;
+        
+        bool hasValue =
+            Current().Type != TokenType.RBrace &&
+            Current().Type != TokenType.Newline &&
+            Current().Type != TokenType.EOF &&
+            Current().Type != TokenType.Semicolon;
+
+        if (hasValue)
+        {
+            value = ParseExpression();
+        }
+        
+        return new ReturnStatement(value,  returnToken.Span);
     }
     
 }
