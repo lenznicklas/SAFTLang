@@ -241,6 +241,11 @@ namespace SAFTLang.Lexer;
             {
                 throw new Exception($"{_state.Line}:{_state.Column}: Unclosed parens");
             }
+
+            if (_bracketDepth != 0)
+            {
+                throw new Exception($"{_state.Line}:{_state.Column}: Unclosed brackets");
+            }
             
             tokens.Add(
                 new Token(
