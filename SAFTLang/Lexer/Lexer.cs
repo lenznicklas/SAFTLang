@@ -1,3 +1,4 @@
+using SAFTLang.Diagnostics;
 using SAFTLang.Lexer.Readers;
 using SAFTLang.Lexer.Text;
 using SAFTLang.Lexer.TokenAndKeywords;
@@ -9,6 +10,10 @@ namespace SAFTLang.Lexer;
     {
         private readonly LexerState _state;
         private readonly TokenReader _reader;
+
+        private readonly DiagnosticBag _diagnostics = new();
+        public IReadOnlyList<Diagnostic> Diagnostics => _diagnostics.Diagnostics;
+        public bool HasErrors => _diagnostics.HasErrors;
         
         private int _parenthesisDepth;
         private int _bracketDepth;
@@ -16,7 +21,7 @@ namespace SAFTLang.Lexer;
         public Lexer(string source)
         {
             _state = new LexerState(source);
-            _reader = new TokenReader(_state);
+            _reader = new TokenReader(_state, _diagnostics);
             _parenthesisDepth = 0;
             _bracketDepth = 0;
         }
@@ -230,7 +235,19 @@ namespace SAFTLang.Lexer;
                         );
                         break;
                     default:
-                        throw new Exception($"{tokenLine}:{tokenColumn}: Unexpected character '{c}'");
+                    {
+                        _diagnostics.ReportError(
+                            new SourceSpan(
+                                tokenStart,
+                                1,
+                                tokenLine,
+                                tokenColumn
+                            ),
+                            $"Unexpected character {c}"
+                        );
+                        
+                        break;
+                    }
                 }
 
                 _state.Advance();
@@ -239,12 +256,28 @@ namespace SAFTLang.Lexer;
 
             if (_parenthesisDepth != 0)
             {
-                throw new Exception($"{_state.Line}:{_state.Column}: Unclosed parens");
+                _diagnostics.ReportError(
+                    new SourceSpan(
+                        _state.Position,
+                        1,
+                        _state.Line,
+                        _state.Column
+                    ),
+                    "Unexpected closing parenthesis"
+                );
             }
 
             if (_bracketDepth != 0)
             {
-                throw new Exception($"{_state.Line}:{_state.Column}: Unclosed brackets");
+                _diagnostics.ReportError(
+                    new SourceSpan(
+                        _state.Position,
+                        1,
+                        _state.Line,
+                        _state.Column
+                    ),
+                    "Unexpected closing bracket"
+                );
             }
             
             tokens.Add(

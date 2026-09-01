@@ -1,3 +1,4 @@
+using SAFTLang.Lexer.Text;
 using SAFTLang.Lexer.TokenAndKeywords;
 
 namespace SAFTLang.Lexer.Readers;
@@ -21,7 +22,23 @@ internal sealed partial class TokenReader
 
         if (_state.IsAtEnd)
         {
-            throw new Exception($"{line}:{column}: unterminated string");
+            _diagnostics.ReportError(
+                new SourceSpan(
+                    start,
+                    _state.Position - start,
+                    line,
+                    column),
+                "Unterminated string"
+            );
+
+            return _state.CreateToken(
+                TokenType.BadToken,
+                "",
+                start,
+                _state.Position - start,
+                line,
+                column
+            );
         }
         
         string value = _state.Source[valueStart.._state.Position];

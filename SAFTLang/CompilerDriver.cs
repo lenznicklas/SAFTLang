@@ -29,20 +29,15 @@ public static class CompilerDriver
 
     public static string? Compile(string source)
     {
-        List<Token> tokens;
-
         // Lexer
-        try
-        {
-            var lexer = new Lexer.Lexer(source);
+        var lexer = new Lexer.Lexer(source);
 
-            tokens = lexer.Tokenize();
-        }
-        catch (Exception e)
+        List<Token> tokens = lexer.Tokenize();
+        
+        PrintDiagnostics(lexer.Diagnostics);
+
+        if (lexer.HasErrors)
         {
-            Console.Error.WriteLine(
-                $"Lexer error: {e.Message}"
-            );
             return null;
         }
         

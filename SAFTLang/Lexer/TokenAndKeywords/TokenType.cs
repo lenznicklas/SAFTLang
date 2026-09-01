@@ -46,4 +46,6 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         IntType,
         StringType,
         VoidType,
+        
+        BadToken,
     }
