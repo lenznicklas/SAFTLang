@@ -33,6 +33,8 @@ namespace SAFTLang.Lexer
         RParen,
         LBrace,
         RBrace,
+        LBracket,
+        RBracket,
         
         EqualEqual,
         NotEqual,

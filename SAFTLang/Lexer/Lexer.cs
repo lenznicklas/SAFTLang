@@ -10,6 +10,7 @@ namespace SAFTLang.Lexer;
         private int _line;
         private int _column;
         private int _parenthesisDepth;
+        private int _bracketDepth;
         
         public Lexer(string source)
         {
@@ -19,6 +20,7 @@ namespace SAFTLang.Lexer;
             _line = 1;
             _column = 1;
             _parenthesisDepth = 0;
+            _bracketDepth = 0;
         }
 
         public List<Token> Tokenize()
@@ -41,7 +43,7 @@ namespace SAFTLang.Lexer;
                         Advance();
                     }
 
-                    if (_parenthesisDepth == 0)
+                    if (_parenthesisDepth == 0 && _bracketDepth == 0)
                     {
                         tokens.Add(
                             CreateToken(
@@ -159,6 +161,24 @@ namespace SAFTLang.Lexer;
                         tokens.Add(
                             CreateSimpleToken(TokenType.RBrace, "}", tokenStart, tokenLine, tokenColumn)
                         );
+                        break;
+                    case '[':
+                        tokens.Add(
+                            CreateSimpleToken(TokenType.LBracket, "[", tokenStart, tokenLine, tokenColumn)
+                        );
+                        _bracketDepth++;
+                        break;
+                    case ']':
+                        if (_bracketDepth == 0)
+                        {
+                            throw new Exception(
+                                $"{tokenLine}:{tokenColumn} Unexpected closing bracket ']'"
+                            );
+                        }
+                        tokens.Add(
+                            CreateSimpleToken(TokenType.RBracket, "]", tokenStart, tokenLine, tokenColumn)
+                        );
+                        _bracketDepth--;
                         break;
                     case '<':
                         if (Peek() == '=')

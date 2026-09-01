@@ -6,13 +6,14 @@ public partial class CodeGenerator
 {
     private string GenerateType(LangType type)
     {
-        return type switch
+        return type.Kind switch
         {
-            LangType.Int => "int",
-            LangType.Bool => "bool",
-            LangType.String => "const char*",
-            LangType.Void => "void",
-            _ => throw new Exception($"Unknown type {type.GetType().Name}")
+            LangTypeKind.Int => "int",
+            LangTypeKind.Bool => "bool",
+            LangTypeKind.String => "const char*",
+            LangTypeKind.Void => "void",
+            LangTypeKind.Array => "saft_array",
+            _ => throw new Exception($"Unknown type {type}")
         };
     }
 

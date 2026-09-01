@@ -25,18 +25,6 @@ public partial class Parser
             _ =>  UnexpectedToken(Current())
         };
     }
-
-    private Token Peek(int offset = 0)
-    {
-        int index = _position + offset;
-
-        if (index >= _tokens.Count)
-        {
-            return _tokens[^1];
-        }
-
-        return _tokens[index];
-    }
     
     private Statement UnexpectedToken(Token token)
     {
@@ -198,6 +186,29 @@ public partial class Parser
         }
         
         Advance();
+
+        while (Current().Type == TokenType.LBracket &&
+               Peek(1).Type == TokenType.RBracket)
+        {
+            Consume(TokenType.LBracket);
+            Consume(TokenType.RBracket);
+
+            if (type == LangType.Void)
+            {
+                _diagnostics.ReportError(
+                    token.Span,
+                    "Array element type cannot be void"
+                );
+
+                type = LangType.Error;
+                continue;
+            }
+
+            if (type != LangType.Error)
+            {
+                type = LangType.ArrayOf(type);
+            }
+        }
 
         return type;
     }

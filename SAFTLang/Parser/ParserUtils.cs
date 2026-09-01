@@ -122,5 +122,18 @@ public partial class Parser
             Advance();
         }
     }
+    
+    private Token Peek(int offset = 0)
+    {
+        int index = _position + offset;
+
+        if (index >= _tokens.Count)
+        {
+            return _tokens[^1];
+        }
+
+        return _tokens[index];
+    }
+
 
 }

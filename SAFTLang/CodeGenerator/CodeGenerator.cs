@@ -20,6 +20,12 @@ public partial class CodeGenerator
         output.AppendLine("#include <stdio.h>");
         output.AppendLine("#include <stdbool.h>");
         output.AppendLine();
+        output.AppendLine("typedef struct");
+        output.AppendLine("{");
+        output.AppendLine("    void* data;");
+        output.AppendLine("    int length;");
+        output.AppendLine("} saft_array;");
+        output.AppendLine();
         
         List<FunctionStatement> functions = statements.OfType<FunctionStatement>().ToList();
 
