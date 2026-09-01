@@ -151,7 +151,7 @@ public partial class SemanticAnalyzer
             );
         }
 
-        LangType valueType = AnalyzeExpression(statement.Value);
+        LangType valueType = AnalyzeExpression(statement.Value, symbol.Type);
 
         if (valueType == LangType.Error)
         {

@@ -236,6 +236,16 @@ public partial class SemanticAnalyzer
             return LangType.Error;
         }
 
+        if (expectedElementType is not null &&
+            firstType != LangType.Error &&
+            firstType != expectedElementType)
+        {
+            _diagnostics.ReportError(
+                array.Elements[0].Span,
+                $"Array elements must be of type {expectedElementType} but got {firstType}"
+            );
+        }
+
         LangType elementType = expectedElementType ?? firstType;
 
         foreach (Expr expr in array.Elements.Skip(1))
