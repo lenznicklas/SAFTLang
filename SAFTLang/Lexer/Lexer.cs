@@ -155,6 +155,7 @@ namespace SAFTLang.Lexer;
                                     ),
                                 "Unexpected closing parenthesis ')'"
                                 );
+                            break;
                         }
 
                         tokens.Add(
@@ -190,6 +191,7 @@ namespace SAFTLang.Lexer;
                                     ),
                                 "Unexpected closing bracket ']'"
                                 );
+                            break;
                         }
                         tokens.Add(
                             _state.CreateSimpleToken(TokenType.RBracket, "]", tokenStart, tokenLine, tokenColumn)
