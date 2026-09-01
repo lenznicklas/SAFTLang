@@ -64,7 +64,7 @@ public partial class Parser
 
     private Expr ParseMultiplication()
     {
-        Expr left = ParseCall();
+        Expr left = ParsePostfix();
 
         while (Current().Type == TokenType.Star || Current().Type == TokenType.Slash)
         {
@@ -75,6 +75,30 @@ public partial class Parser
             left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }
         return left;
+    }
+
+    private Expr ParsePostfix()
+    {
+        Expr expr = ParsePrimary();
+
+        while (true)
+        {
+            if (Current().Type == TokenType.LParen)
+            {
+                expr = FinishCall(expr);
+                continue;
+            }
+
+            if (Current().Type == TokenType.LBracket)
+            {
+                expr = FinishIndex(expr);
+                continue;
+            }
+            
+            break;
+        }
+
+        return expr;
     }
 
     private Expr ParseCall()
@@ -222,6 +246,19 @@ public partial class Parser
         SourceSpan span = SourceSpan.Combine(openingBracket.Span, closingBracket.Span);
         
         return new ArrayExpr(elements, span);
+    }
+
+    private Expr FinishIndex(Expr target)
+    {
+        Consume(TokenType.LBracket);
+
+        Expr index = ParseExpression();
+
+        Token closingBracket = Consume(TokenType.RBracket);
+
+        SourceSpan span = SourceSpan.Combine(target.Span, closingBracket.Span);
+
+        return new IndexExpr(target, index, span);
     }
 
 }
