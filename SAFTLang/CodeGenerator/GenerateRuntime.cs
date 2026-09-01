@@ -56,5 +56,40 @@ public partial class CodeGenerator
         output.AppendLine("    return result;");
         output.AppendLine("}");
         output.AppendLine();
+        
+        output.AppendLine(
+            "static void* saft_array_at(" +
+            "saft_array array, int index, " +
+            "size_t element_size)"
+        );
+
+        output.AppendLine("{");
+
+        output.AppendLine(
+            "    if (index < 0 || index >= array.length)"
+        );
+
+        output.AppendLine("    {");
+
+        output.AppendLine(
+            "        fprintf(stderr, " +
+            "\"SAFT runtime error: array index out of bounds\\n\");"
+        );
+
+        output.AppendLine(
+            "        exit(1);"
+        );
+
+        output.AppendLine("    }");
+
+        output.AppendLine();
+
+        output.AppendLine(
+            "    return (char*)array.data + " +
+            "(size_t)index * element_size;"
+        );
+
+        output.AppendLine("}");
+        output.AppendLine();
     }
 }

@@ -29,6 +29,9 @@ public partial class CodeGenerator
             
             ArrayExpr array =>
                 GenerateArrayExpression(array),
+            
+            IndexExpr index =>
+                GenerateIndexExpression(index),
 
             _ => throw new Exception($"Unknown expression {expr.GetType().Name}")
         };
