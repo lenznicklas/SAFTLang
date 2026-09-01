@@ -1,8 +1,8 @@
-namespace SAFTLang.Lexer;
+namespace SAFTLang.Lexer.TokenAndKeywords;
 
-public partial class Lexer
+public static class KeywordsDict
 {
-    private static readonly Dictionary<string, TokenType>
+    public static readonly Dictionary<string, TokenType>
         Keywords = new()
         {
             ["let"] = TokenType.Let,

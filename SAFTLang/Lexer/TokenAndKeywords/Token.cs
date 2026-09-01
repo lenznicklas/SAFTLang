@@ -1,6 +1,6 @@
 using SAFTLang.Lexer.Text;
 
-namespace SAFTLang.Lexer;
+namespace SAFTLang.Lexer.TokenAndKeywords;
 
 public record Token(
     TokenType Type, 

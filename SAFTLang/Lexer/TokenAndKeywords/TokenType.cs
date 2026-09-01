@@ -1,5 +1,4 @@
-namespace SAFTLang.Lexer
-{
+namespace SAFTLang.Lexer.TokenAndKeywords;
     public enum TokenType
     {
         EOF,
@@ -47,4 +46,4 @@ namespace SAFTLang.Lexer
         IntType,
         StringType,
         VoidType,
-    }}
+    }
