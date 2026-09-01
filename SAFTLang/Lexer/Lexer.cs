@@ -126,7 +126,6 @@ namespace SAFTLang.Lexer;
                                 _state.CreateSimpleToken(TokenType.Equal, "=", tokenStart, tokenLine, tokenColumn)
                             );
                         }
-
                         break;
                     case ';':
                         tokens.Add(
@@ -147,7 +146,15 @@ namespace SAFTLang.Lexer;
                     case ')':
                         if (_parenthesisDepth == 0)
                         {
-                            throw new Exception($"{tokenLine}:{tokenColumn}Unexpected closing parenthesis ')'");
+                            _diagnostics.ReportError(
+                                new SourceSpan(
+                                    tokenStart,
+                                    1,
+                                    tokenLine,
+                                    tokenColumn
+                                    ),
+                                "Unexpected closing parenthesis ')'"
+                                );
                         }
 
                         tokens.Add(
@@ -174,9 +181,15 @@ namespace SAFTLang.Lexer;
                     case ']':
                         if (_bracketDepth == 0)
                         {
-                            throw new Exception(
-                                $"{tokenLine}:{tokenColumn} Unexpected closing bracket ']'"
-                            );
+                            _diagnostics.ReportError(
+                                new SourceSpan(
+                                    tokenStart,
+                                    1,
+                                    tokenLine,
+                                    tokenColumn
+                                    ),
+                                "Unexpected closing bracket ']'"
+                                );
                         }
                         tokens.Add(
                             _state.CreateSimpleToken(TokenType.RBracket, "]", tokenStart, tokenLine, tokenColumn)
@@ -225,7 +238,15 @@ namespace SAFTLang.Lexer;
                         }
                         else
                         {
-                            throw new Exception($"Unexpected character {_state.Current}");
+                            _diagnostics.ReportError(
+                                new SourceSpan(
+                                    tokenStart,
+                                    1,
+                                    tokenLine,
+                                    tokenColumn
+                                ),
+                                $"Unexpected character {_state.Current}"
+                            );
                         }
 
                         break;
@@ -263,7 +284,7 @@ namespace SAFTLang.Lexer;
                         _state.Line,
                         _state.Column
                     ),
-                    "Unexpected closing parenthesis"
+                    "Unclosed parenthesis '{'"
                 );
             }
 
@@ -276,7 +297,7 @@ namespace SAFTLang.Lexer;
                         _state.Line,
                         _state.Column
                     ),
-                    "Unexpected closing bracket"
+                    "Unclosied bracket '['"
                 );
             }
             
