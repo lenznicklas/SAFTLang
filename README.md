@@ -11,6 +11,7 @@
 `bool`
 `int`
 `string`
+`array`
 `void`
 `error`
 
@@ -45,6 +46,16 @@ Explicit typing is also possible:
 `let x: int = 5`
 
 `let y: int = "Hello World"` ==> error
+
+You can create array by using the following syntax:
+
+`let arr: int[] = [1, 2, 3]`
+
+`let arr2 = ["a", "b", "c"]` ==> string[]
+
+If you create an empty array, you have to declare the type.
+
+`let arr3 = []` ==> error
 
 ### If/Else
 

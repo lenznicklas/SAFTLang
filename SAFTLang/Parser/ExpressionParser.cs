@@ -175,6 +175,11 @@ public partial class Parser
             return expression;
         }
 
+        if (token.Type == TokenType.LBracket)
+        {
+            return ParseArrayExpression();
+        }
+
         _diagnostics.ReportError(
             token.Span,
             $"Expected expression, got " +
@@ -193,6 +198,30 @@ public partial class Parser
         }
 
         return new ErrorExpr(token.Span);
+    }
+
+    private Expr ParseArrayExpression()
+    {
+        Token openingBracket = Consume(TokenType.LBracket);
+        var elements = new List<Expr>();
+
+        while (Current().Type != TokenType.RBracket && !IsAtEnd())
+        {
+            elements.Add(ParseExpression());
+
+            if (Current().Type != TokenType.Comma)
+            {
+                break;
+            }
+
+            Consume(TokenType.Comma);
+        }
+        
+        Token closingBracket = Consume(TokenType.RBracket);
+
+        SourceSpan span = SourceSpan.Combine(openingBracket.Span, closingBracket.Span);
+        
+        return new ArrayExpr(elements, span);
     }
 
 }

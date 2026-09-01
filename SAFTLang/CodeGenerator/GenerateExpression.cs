@@ -26,6 +26,9 @@ public partial class CodeGenerator
             
             CallExpr call =>
                 GenerateCallExpression(call),
+            
+            ArrayExpr array =>
+                GenerateArrayExpression(array),
 
             _ => throw new Exception($"Unknown expression {expr.GetType().Name}")
         };

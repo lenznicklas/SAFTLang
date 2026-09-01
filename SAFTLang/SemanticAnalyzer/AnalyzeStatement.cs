@@ -45,8 +45,13 @@ public partial class SemanticAnalyzer
     private void AnalyzeLetStatement(LetStatement statement)
     {
         LangType? declaredType = statement.DeclaredType;
-        LangType valueType = AnalyzeExpression(statement.Value);
+        LangType valueType = AnalyzeExpression(statement.Value, declaredType);
 
+        if (valueType == LangType.Error)
+        {
+            return;
+        }
+        
         if (valueType == LangType.Void)
         {
             _diagnostics.ReportError(statement.Span,"Cannot assign type Void to a variable");
@@ -67,8 +72,13 @@ public partial class SemanticAnalyzer
     private void AnalyzeConstStatement(ConstStatement statement)
     {
         LangType? declaredType = statement.DeclaredType;
-        LangType valueType = AnalyzeExpression(statement.Value);
+        LangType valueType = AnalyzeExpression(statement.Value, declaredType);
 
+        if (valueType == LangType.Error)
+        {
+            return;
+        }
+        
         if (valueType == LangType.Void)
         {
             _diagnostics.ReportError(statement.Span, "Cannot assign type Void to a variable");
@@ -238,7 +248,7 @@ public partial class SemanticAnalyzer
             return;
         }
 
-        LangType actualType = AnalyzeExpression(statement.Value);
+        LangType actualType = AnalyzeExpression(statement.Value, expectedType);
 
         if (actualType == LangType.Error)
         {

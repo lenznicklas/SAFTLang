@@ -181,6 +181,8 @@ public partial class Parser
             _diagnostics.ReportError(token.Span,
                 $"Expected Type, got {token.Type}"
             );
+            
+            Advance();
 
             return LangType.Error;
         }

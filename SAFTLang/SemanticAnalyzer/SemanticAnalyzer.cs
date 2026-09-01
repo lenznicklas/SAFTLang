@@ -14,13 +14,27 @@ public partial class SemanticAnalyzer
     private FunctionStatement? _currentFunction;
     
     private readonly Dictionary<Statement, LangType> _statementTypes = new();
+    
+    private readonly Dictionary<Expr, LangType> _expressionTypes = new();
+    
     private readonly DiagnosticBag _diagnostics = new();
-
     public IReadOnlyList<Diagnostic> Diagnostics => _diagnostics.Diagnostics;
     
     public SemanticAnalyzer()
     {
         _scopes.Push(new Dictionary<string, VariableSymbol>());
+    }
+
+    public LangType GetExpressionType(Expr expr)
+    {
+        if (_expressionTypes.TryGetValue(expr, out LangType? type))
+        {
+            return type;
+        }
+
+        throw new InvalidOperationException(
+            $"No type information for {expr.GetType().Name}"
+        );
     }
 
     private void BeginScope()
