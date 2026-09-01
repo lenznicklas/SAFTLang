@@ -286,7 +286,7 @@ namespace SAFTLang.Lexer;
                         _state.Line,
                         _state.Column
                     ),
-                    "Unclosed parenthesis '{'"
+                    "Unclosed parenthesis '('"
                 );
             }
 
@@ -299,7 +299,7 @@ namespace SAFTLang.Lexer;
                         _state.Line,
                         _state.Column
                     ),
-                    "Unclosied bracket '['"
+                    "Unclosed bracket '['"
                 );
             }
             
