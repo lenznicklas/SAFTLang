@@ -64,7 +64,7 @@ public partial class CodeGenerator
             case AssignmentStatement assignmentStatement:
                 output.AppendLine(
                     $"{indentation}" +
-                    $"{GenerateIdentifier(assignmentStatement.Name)} = " +
+                    $"{GenerateIdentifier(assignmentStatement.Target)} = " +
                     $"{GenerateExpression(assignmentStatement.Value)};"
                 );
                 break;

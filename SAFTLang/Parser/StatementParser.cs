@@ -13,12 +13,7 @@ public partial class Parser
             TokenType.Let => ParseLetStatement(),
             TokenType.Const => ParseConstStatement(),
             TokenType.If => ParseIfStatement(),
-            TokenType.Identifier 
-                when Peek(1).Type == TokenType.Equal => 
-                ParseAssignmentStatement(),
-            TokenType.Identifier
-                when Peek(1).Type == TokenType.LParen =>
-                ParseExpressionStatement(),
+            TokenType.Identifier => ParseIdentifierStartedStatement(),
             TokenType.Func => ParseFunctionStatement(),
             TokenType.Return => ParseReturnStatement(),
             
@@ -136,21 +131,6 @@ public partial class Parser
         return block;
     }
 
-    private Statement ParseAssignmentStatement()
-    {
-        Token name = Consume(TokenType.Identifier);
-
-        Consume(TokenType.Equal);
-
-        Expr value = ParseExpression();
-        
-        ConsumeStatementEnd();
-        
-        SourceSpan span =  SourceSpan.Combine(name.Span, value.Span);
-        
-        return new AssignmentStatement(name.Value, value, span);
-    }
-
     private LangType? ParseOptionalType()
     {
         if (Current().Type != TokenType.Colon)
@@ -214,18 +194,7 @@ public partial class Parser
 
         return type;
     }
-
-    private Statement ParseExpressionStatement()
-    {
-        Expr expr = ParseExpression();
-        ConsumeStatementEnd();
-
-        return new ExpressionStatement(
-            expr,
-            expr.Span
-        );
-    }
-
+    
     private Statement ParseFunctionStatement()
     {
         Token funcToken = Consume(TokenType.Func);
@@ -295,6 +264,28 @@ public partial class Parser
         ConsumeStatementEnd();
         
         return new ReturnStatement(value,  returnToken.Span);
+    }
+
+    private Statement ParseIdentifierStartedStatement()
+    {
+        Expr left = ParseExpression();
+
+        if (Current().Type == TokenType.Equal)
+        {
+            Consume(TokenType.Equal);
+
+            Expr value = ParseExpression();
+            
+            ConsumeStatementEnd();
+
+            SourceSpan span = SourceSpan.Combine(left.Span, value.Span);
+
+            return new AssignmentStatement(left, value, span);
+        }
+        
+        ConsumeStatementEnd();
+
+        return new ExpressionStatement(left, left.Span);
     }
     
 }

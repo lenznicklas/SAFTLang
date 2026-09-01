@@ -296,7 +296,7 @@ public partial class SemanticAnalyzer
         if (indexType != LangType.Int)
         {
             _diagnostics.ReportError(
-                index.Target.Span,
+                index.Index.Span,
                 $"Index must be int, but got {indexType}"
             );
             return LangType.Error;

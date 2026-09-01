@@ -136,35 +136,86 @@ public partial class SemanticAnalyzer
 
     private void AnalyzeAssignmentStatement(AssignmentStatement statement)
     {
-        VariableSymbol? symbol = ResolveVariable(statement.Name, statement.Span);
+        LangType targetType;
 
-        if (symbol is null)
+        switch (statement.Target)
         {
-            return;
-        }
-        
-        if (symbol.IsConst)
-        {
-            _diagnostics.ReportError(
-                statement.Span,
-                $"Can't assign {symbol.Name} to type const"
-            );
+            case IdentifierExpr identifier:
+            {
+                VariableSymbol? symbol = ResolveVariable(identifier.Name, identifier.Span);
+
+                if (symbol is null)
+                {
+                    return;
+                }
+
+                if (symbol.IsConst)
+                {
+                    _diagnostics.ReportError(
+                        statement.Target.Span,
+                        $"Cannot assign to const variable '{identifier.Name}'"
+                    );
+                    return;
+                }
+
+                targetType = symbol.Type;
+                break;
+            }
+
+            case IndexExpr index:
+            {
+                targetType = AnalyzeExpression(index);
+
+                if (targetType == LangType.Error)
+                {
+                    return;
+                }
+
+                IdentifierExpr? root = GetRootIdentifier(index);
+
+                if (root is not null)
+                {
+                    VariableSymbol? symbol = ResolveVariable(root.Name, root.Span);
+
+                    if (symbol?.IsConst == true)
+                    {
+                        _diagnostics.ReportError(
+                            statement.Target.Span,
+                            $"Cannot modify const array '{root.Name}'"
+                        );
+                        
+                        return;
+                    }
+                }
+                
+                break;
+            }
+
+            default:
+            {
+                _diagnostics.ReportError(
+                    statement.Target.Span,
+                    "Left side of assignment is not assignable"
+                );
+                return;
+            }
         }
 
-        LangType valueType = AnalyzeExpression(statement.Value, symbol.Type);
+        LangType valueType = AnalyzeExpression(statement.Value, targetType);
 
         if (valueType == LangType.Error)
         {
             return;
         }
 
-        if (valueType != symbol.Type)
+        if (valueType != targetType)
         {
             _diagnostics.ReportError(
                 statement.Value.Span,
-                $"Can't assign {valueType} to {symbol.Name} of type {symbol.Type}"
+                $"Cannot assign {valueType} to {targetType}"
             );
         }
+
     }
 
     private void AnalyzeFunctionStatement(
@@ -262,6 +313,18 @@ public partial class SemanticAnalyzer
                 $"Expected func '{_currentFunction.Name}' to return a value of {expectedType} not {actualType}"
             );
         }
+    }
+
+    private IdentifierExpr? GetRootIdentifier(Expr expr)
+    {
+        return expr switch
+        {
+            IdentifierExpr identifierExpr => identifierExpr,
+
+            IndexExpr indexExpr => GetRootIdentifier(indexExpr.Target),
+
+            _ => null
+        };
     }
     
 }

@@ -57,6 +57,18 @@ If you create an empty array, you have to declare the type.
 
 `let arr3 = []` ==> error
 
+You can create primary variables from array indexes by using:
+
+`let n = arr[1]`
+
+If you want to change a value in a mutable array:
+
+`arr[0] = 10`
+
+You can also create immutable arrays by changing `let` to `const`
+
+`const arr4 = [1, 2, 3, 4]`
+
 ### If/Else
 
 ```
