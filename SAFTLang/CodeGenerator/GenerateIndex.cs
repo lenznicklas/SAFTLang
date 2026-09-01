@@ -17,8 +17,7 @@ public partial class CodeGenerator
         return
             $"*(({cElementType}*)" +
             $"saft_array_at(" +
-            $"{target}" +
-            $"{indexValue}" +
+            $"{target}, {indexValue}, " +
             $"sizeof({cElementType})))";
     }
 }

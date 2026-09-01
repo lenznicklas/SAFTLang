@@ -70,7 +70,7 @@ public partial class Parser
         {
             TokenType op = Current().Type;
             Advance();
-            Expr right = ParseCall();
+            Expr right = ParsePostfix();
             
             left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }
