@@ -24,7 +24,7 @@ internal sealed partial class StatementParser
 
                 _state.Consume(TokenType.Colon);
 
-                LangType parameterType = ParseType();
+                LangType parameterType = _typeParser.ParseType();
 
                 parameters.Add(new Parameter(parameterName.Value, parameterType, parameterName.Span));
 
@@ -39,7 +39,7 @@ internal sealed partial class StatementParser
 
         _state.Consume(TokenType.RParen);
             
-        LangType returnType = ParseType();
+        LangType returnType = _typeParser.ParseType();
             
         BlockStatement body = ParseBlockStatement();
 

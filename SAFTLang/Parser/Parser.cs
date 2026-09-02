@@ -4,6 +4,7 @@ using SAFTLang.Lexer;
 using SAFTLang.Lexer.TokenAndKeywords;
 using SAFTLang.Parser.ParseExpressions;
 using SAFTLang.Parser.ParseStatements;
+using SAFTLang.Parser.ParseTypes;
 
 namespace SAFTLang.Parser;
 
@@ -23,8 +24,9 @@ public partial class Parser
         _state = new ParserState(tokens, _diagnostics);
         
         var expressions = new ExpressionParser(_state,  _diagnostics);
+        var type = new TypeParser(_state, _diagnostics);
 
-        _statementParser = new StatementParser(_state, expressions, _diagnostics);
+        _statementParser = new StatementParser(_state, expressions, _diagnostics, type);
         
         _tokens = tokens;
     }

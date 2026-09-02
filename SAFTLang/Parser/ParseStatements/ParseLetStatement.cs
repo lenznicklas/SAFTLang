@@ -12,7 +12,7 @@ internal sealed partial class StatementParser
         
         Token name = _state.Consume(TokenType.Identifier);
 
-        LangType? type = ParseOptionalType();
+        LangType? type = _typeParser.ParseOptionalType();
 
         _state.Consume(TokenType.Equal);
 
