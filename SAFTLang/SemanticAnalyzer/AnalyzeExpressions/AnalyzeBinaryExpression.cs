@@ -40,6 +40,7 @@ internal sealed partial class ExpressionAnalyzer
                 {
                     return LangType.Error;
                 }
+                
                 if (leftType != rightType)
                 {
                     _diagnostics.ReportError(
@@ -48,12 +49,11 @@ internal sealed partial class ExpressionAnalyzer
                     );
                 }
 
-                if (leftType == LangType.String)
+                if (leftType == LangType.Void)
                 {
-                    _diagnostics.ReportError(
-                        binary.Span,
-                        $"Cannot compare Strings yet"
-                    );
+                    _diagnostics.ReportError(binary.Span, "Cannot compare values of type void");
+
+                    return LangType.Error;
                 }
 
                 return LangType.Bool;

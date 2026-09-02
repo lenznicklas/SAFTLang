@@ -1,4 +1,5 @@
 using SAFTLang.AST.Expressions;
+using SAFTLang.AST.Types;
 using SAFTLang.Lexer.TokenAndKeywords;
 
 namespace SAFTLang.CodeGenerator.GenerateExpressions;
@@ -11,6 +12,14 @@ internal sealed partial class ExpressionGenerator
         string left = GenerateExpression(binary.Left);
         string right = GenerateExpression(binary.Right);
 
+        if (binary.Operator == TokenType.EqualEqual ||
+            binary.Operator == TokenType.NotEqual)
+        {
+            LangType operandType = _analyzer.GetExpressionType(binary.Left);
+            
+            return GenerateEqualityExpression(binary, left, right, operandType);
+        }
+        
         string op = binary.Operator switch
         {
             TokenType.Plus => "+",

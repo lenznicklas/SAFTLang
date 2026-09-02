@@ -19,21 +19,26 @@ internal sealed partial class ExpressionGenerator
 
         LangType elementType = arrayType.ElementType;
 
+        string cElementType = _typeGenerator.GenerateType(elementType);
+
+        string eqalityFunction = _typeGenerator.GenerateEqualityFunction(elementType);
+        
         if (array.Elements.Count == 0)
         {
-            return "(saft_array){ " +
-                   ".data = NULL, " +
-                   ".length = 0 }";
+            return "saft_array_copy( " +
+                   "NULL, " +
+                   $"sizeof({cElementType})," +
+                   $"0, " +
+                   $"{eqalityFunction})";
         }
-
-        string cElementType = _typeGenerator.GenerateType(elementType);
 
         string elements = string.Join(", ", array.Elements.Select(GenerateExpression));
 
         return $"saft_array_copy(" +
                $"({cElementType}[]){{{elements}}}, " +
                $"sizeof({cElementType}), " +
-               $"{array.Elements.Count})";
+               $"{array.Elements.Count}," +
+               $"{eqalityFunction})";
 
     }
 

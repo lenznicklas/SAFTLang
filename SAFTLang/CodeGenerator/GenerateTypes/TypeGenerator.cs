@@ -17,4 +17,17 @@ internal sealed class TypeGenerator
         };
     }
 
+    public string GenerateEqualityFunction(LangType type)
+    {
+        return type.Kind switch
+        {
+            LangTypeKind.Int => "saft_equal_int",
+            LangTypeKind.Bool => "saft_equal_bool",
+            LangTypeKind.String => "saft_equal_string",
+            LangTypeKind.Array => "saft_equal_array",
+
+            _ => throw new InvalidOperationException($"Type {type} is not comparable")
+        };
+    }
+
 }

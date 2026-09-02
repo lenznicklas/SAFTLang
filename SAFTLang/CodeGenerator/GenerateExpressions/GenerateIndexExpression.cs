@@ -1,6 +1,5 @@
 using SAFTLang.AST.Expressions;
 using SAFTLang.AST.Types;
-using SAFTLang.CodeGenerator.Utils;
 
 namespace SAFTLang.CodeGenerator.GenerateExpressions;
 
@@ -19,8 +18,7 @@ internal sealed partial class ExpressionGenerator
         return
             $"*(({cElementType}*)" +
             $"saft_array_at(" +
-            $"{target}, {indexValue}, " +
-            $"sizeof({cElementType})))";
+            $"{target}, {indexValue}))";
     }
 
 }
