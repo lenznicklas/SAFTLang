@@ -282,7 +282,7 @@ namespace SAFTLang.Lexer;
                 _diagnostics.ReportError(
                     new SourceSpan(
                         _state.Position,
-                        1,
+                        0,
                         _state.Line,
                         _state.Column
                     ),
@@ -295,7 +295,7 @@ namespace SAFTLang.Lexer;
                 _diagnostics.ReportError(
                     new SourceSpan(
                         _state.Position,
-                        1,
+                        0,
                         _state.Line,
                         _state.Column
                     ),

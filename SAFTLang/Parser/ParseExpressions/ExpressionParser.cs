@@ -1,26 +1,35 @@
 using SAFTLang.AST;
-using SAFTLang.Lexer;
-using SAFTLang.Lexer.Text;
+using SAFTLang.Diagnostics;
 using SAFTLang.Lexer.TokenAndKeywords;
+using SAFTLang.Lexer.Text;
 
-namespace SAFTLang.Parser;
+namespace SAFTLang.Parser.ParseExpressions;
 
-public partial class Parser
+internal sealed class ExpressionParser
 {
-    private Expr ParseExpression()
+    private readonly ParserState _state;
+    private readonly DiagnosticBag _diagnostics;
+
+    public ExpressionParser(ParserState state, DiagnosticBag diagnostics)
+    {
+        _state = state;
+        _diagnostics = diagnostics;
+    }
+
+    public Expr ParseExpression()
     {
         return ParseEquality();
     }
-
+    
     private Expr ParseEquality()
     {
         Expr left = ParseComparison();
 
-        while (Current().Type == TokenType.EqualEqual ||
-               Current().Type == TokenType.NotEqual)
+        while (_state.Current.Type == TokenType.EqualEqual ||
+               _state.Current.Type == TokenType.NotEqual)
         {
-            TokenType op = Current().Type;
-            Advance();
+            TokenType op = _state.Current.Type;
+            _state.Advance();
 
             Expr right = ParseComparison();
             
@@ -29,18 +38,18 @@ public partial class Parser
         
         return left;
     }
-
+    
     private Expr ParseComparison()
     {
         Expr left = ParseAddition();
 
-        while (Current().Type == TokenType.Less ||
-               Current().Type == TokenType.LessEqual ||
-               Current().Type == TokenType.Greater ||
-               Current().Type == TokenType.GreaterEqual)
+        while (_state.Current.Type == TokenType.Less ||
+               _state.Current.Type == TokenType.LessEqual ||
+               _state.Current.Type == TokenType.Greater ||
+               _state.Current.Type == TokenType.GreaterEqual)
         {
-            TokenType op = Current().Type;
-            Advance();
+            TokenType op = _state.Current.Type;
+            _state.Advance();
             Expr right = ParseAddition();
             left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }
@@ -52,10 +61,10 @@ public partial class Parser
     {
         Expr left = ParseMultiplication();
         
-        while (Current().Type == TokenType.Plus || Current().Type == TokenType.Minus)
+        while (_state.Current.Type == TokenType.Plus || _state.Current.Type == TokenType.Minus)
         {
-            TokenType op = Current().Type;
-            Advance();
+            TokenType op = _state.Current.Type;
+            _state.Advance();
 
             Expr right = ParseMultiplication();
             left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
@@ -67,10 +76,10 @@ public partial class Parser
     {
         Expr left = ParsePostfix();
 
-        while (Current().Type == TokenType.Star || Current().Type == TokenType.Slash)
+        while (_state.Current.Type == TokenType.Star || _state.Current.Type == TokenType.Slash)
         {
-            TokenType op = Current().Type;
-            Advance();
+            TokenType op = _state.Current.Type;
+            _state.Advance();
             Expr right = ParsePostfix();
             
             left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
@@ -84,13 +93,13 @@ public partial class Parser
 
         while (true)
         {
-            if (Current().Type == TokenType.LParen)
+            if (_state.Current.Type == TokenType.LParen)
             {
                 expr = FinishCall(expr);
                 continue;
             }
 
-            if (Current().Type == TokenType.LBracket)
+            if (_state.Current.Type == TokenType.LBracket)
             {
                 expr = FinishIndex(expr);
                 continue;
@@ -101,11 +110,11 @@ public partial class Parser
 
         return expr;
     }
-
+    
     private Expr ParseCall()
     {
         Expr expression = ParsePrimary();
-        while (Current().Type == TokenType.LParen)
+        while (_state.Current.Type == TokenType.LParen)
         {
             expression = FinishCall(expression);
         }
@@ -113,41 +122,13 @@ public partial class Parser
         return expression;
     }
 
-    private Expr FinishCall(Expr callee)
-    {
-        Consume(TokenType.LParen);
-        
-        var arguments = new List<Expr>();
-
-        if (Current().Type != TokenType.RParen)
-        {
-            do
-            {
-                arguments.Add(ParseExpression());
-
-                if (Current().Type != TokenType.Comma)
-                {
-                    break;
-                }
-
-                Consume(TokenType.Comma);
-            } while (Current().Type != TokenType.RParen);
-        }
-        
-        Token closingParen = Consume(TokenType.RParen);
-
-        SourceSpan span = SourceSpan.Combine(callee.Span, closingParen.Span);
-
-        return new CallExpr(callee, arguments, span);
-    }
-
     private Expr ParsePrimary()
     {
-        Token token = Current();
+        Token token = _state.Current;
 
         if (token.Type == TokenType.Number)
         {
-            Advance();
+            _state.Advance();
             return new IntegerExpr(
                 token.Value,
                 token.Span
@@ -156,7 +137,7 @@ public partial class Parser
 
         if (token.Type == TokenType.True)
         {
-            Advance();
+            _state.Advance();
             return new BoolExpr(
                 true,
                 token.Span
@@ -165,7 +146,7 @@ public partial class Parser
 
         if (token.Type == TokenType.False)
         {
-            Advance();
+            _state.Advance();
             return new BoolExpr(
                 false,
                 token.Span
@@ -174,7 +155,7 @@ public partial class Parser
 
         if (token.Type == TokenType.String)
         {
-            Advance();
+            _state.Advance();
             return new StringExpr(
                 token.Value,
                 token.Span
@@ -183,7 +164,7 @@ public partial class Parser
 
         if (token.Type == TokenType.Identifier)
         {
-            Advance();
+            _state.Advance();
             return new IdentifierExpr(
                 token.Value,
                 token.Span
@@ -192,10 +173,10 @@ public partial class Parser
 
         if (token.Type == TokenType.LParen)
         {
-            Advance();
+            _state.Advance();
             Expr expression = ParseExpression();
 
-            Consume(TokenType.RParen);
+            _state.Consume(TokenType.RParen);
             
             return expression;
         }
@@ -219,47 +200,76 @@ public partial class Parser
 
         if (!isExpressionBoundary)
         {
-            Advance();
+            _state.Advance();
         }
 
         return new ErrorExpr(token.Span);
     }
-
+    
     private Expr ParseArrayExpression()
     {
-        Token openingBracket = Consume(TokenType.LBracket);
+        Token openingBracket = _state.Consume(TokenType.LBracket);
         var elements = new List<Expr>();
 
-        while (Current().Type != TokenType.RBracket && !IsAtEnd())
+        while (_state.Current.Type != TokenType.RBracket && !_state.IsAtEnd)
         {
             elements.Add(ParseExpression());
 
-            if (Current().Type != TokenType.Comma)
+            if (_state.Current.Type != TokenType.Comma)
             {
                 break;
             }
 
-            Consume(TokenType.Comma);
+            _state.Consume(TokenType.Comma);
         }
         
-        Token closingBracket = Consume(TokenType.RBracket);
+        Token closingBracket = _state.Consume(TokenType.RBracket);
 
         SourceSpan span = SourceSpan.Combine(openingBracket.Span, closingBracket.Span);
         
         return new ArrayExpr(elements, span);
     }
+    
+    private Expr FinishCall(Expr callee)
+    {
+        _state.Consume(TokenType.LParen);
+        
+        var arguments = new List<Expr>();
+
+        if (_state.Current.Type != TokenType.RParen)
+        {
+            do
+            {
+                arguments.Add(ParseExpression());
+
+                if (_state.Current.Type != TokenType.Comma)
+                {
+                    break;
+                }
+
+                _state.Consume(TokenType.Comma);
+            } while (_state.Current.Type != TokenType.RParen);
+        }
+        
+        Token closingParen = _state.Consume(TokenType.RParen);
+
+        SourceSpan span = SourceSpan.Combine(callee.Span, closingParen.Span);
+
+        return new CallExpr(callee, arguments, span);
+    }
 
     private Expr FinishIndex(Expr target)
     {
-        Consume(TokenType.LBracket);
+        _state.Consume(TokenType.LBracket);
 
         Expr index = ParseExpression();
 
-        Token closingBracket = Consume(TokenType.RBracket);
+        Token closingBracket = _state.Consume(TokenType.RBracket);
 
         SourceSpan span = SourceSpan.Combine(target.Span, closingBracket.Span);
 
         return new IndexExpr(target, index, span);
     }
+
 
 }
