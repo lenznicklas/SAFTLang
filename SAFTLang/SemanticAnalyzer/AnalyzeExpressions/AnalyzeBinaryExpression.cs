@@ -47,6 +47,8 @@ internal sealed partial class ExpressionAnalyzer
                         binary.Span,
                         $"Cannot compare {leftType} with {rightType}"
                     );
+
+                    return LangType.Error;
                 }
 
                 if (leftType == LangType.Void)
