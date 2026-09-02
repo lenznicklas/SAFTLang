@@ -1,15 +1,25 @@
 using System.Text;
 using SAFTLang.AST.Statements;
+using SAFTLang.CodeGenerator.GenerateExpressions;
+using SAFTLang.CodeGenerator.GenerateStatements;
+using SAFTLang.CodeGenerator.GenerateTypes;
+using SAFTLang.CodeGenerator.Runtime;
 
 namespace SAFTLang.CodeGenerator;
 
-public partial class CodeGenerator
+public class CodeGenerator
 {
-    private readonly SemanticAnalyzer.SemanticAnalyzer _analyzer;
+    private readonly FunctionGenerator _functionGenerator;
 
     public CodeGenerator(SemanticAnalyzer.SemanticAnalyzer analyzer)
     {
-        _analyzer = analyzer;
+        var types = new TypeGenerator();
+        
+        var expressions = new ExpressionGenerator(analyzer, types);
+
+        var statements = new StatementGenerator(analyzer, expressions, types);
+
+        _functionGenerator = new FunctionGenerator(types, statements);
     }
     
     public string Generate(List<Statement> statements)
@@ -22,13 +32,13 @@ public partial class CodeGenerator
         output.AppendLine("#include <string.h>");
         output.AppendLine();
 
-        GenerateRuntime(output);
+        RuntimeGenerator.GenerateRuntime(output);
         
         List<FunctionStatement> functions = statements.OfType<FunctionStatement>().ToList();
 
         foreach (FunctionStatement function in functions)
         {
-            GenerateFunctionPrototype(output, function);
+            _functionGenerator.GenerateFunctionPrototype(output, function);
         }
 
         if (functions.Count > 0)
@@ -38,7 +48,7 @@ public partial class CodeGenerator
 
         foreach (FunctionStatement function in functions)
         {
-            GenerateFunctionDefinition(output, function);
+            _functionGenerator.GenerateFunctionDefinition(output, function);
         }
         
         output.AppendLine("int main(void)");

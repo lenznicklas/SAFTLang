@@ -1,15 +1,16 @@
 using SAFTLang.AST.Expressions;
 using SAFTLang.AST.Types;
+using SAFTLang.CodeGenerator.Utils;
 
-namespace SAFTLang.CodeGenerator;
+namespace SAFTLang.CodeGenerator.GenerateExpressions;
 
-public partial class CodeGenerator
+internal sealed partial class ExpressionGenerator
 {
     private string GenerateIndexExpression(IndexExpr index)
     {
         LangType elementType = _analyzer.GetExpressionType(index);
 
-        string cElementType = GenerateType(elementType);
+        string cElementType = _typeGenerator.GenerateType(elementType);
 
         string target = GenerateExpression(index.Target);
 
@@ -21,4 +22,5 @@ public partial class CodeGenerator
             $"{target}, {indexValue}, " +
             $"sizeof({cElementType})))";
     }
+
 }

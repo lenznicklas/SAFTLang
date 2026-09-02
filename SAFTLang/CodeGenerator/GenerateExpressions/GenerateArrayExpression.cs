@@ -1,9 +1,9 @@
 using SAFTLang.AST.Expressions;
 using SAFTLang.AST.Types;
 
-namespace SAFTLang.CodeGenerator;
+namespace SAFTLang.CodeGenerator.GenerateExpressions;
 
-public partial class CodeGenerator
+internal sealed partial class ExpressionGenerator
 {
     private string GenerateArrayExpression(ArrayExpr array)
     {
@@ -26,7 +26,7 @@ public partial class CodeGenerator
                    ".length = 0 }";
         }
 
-        string cElementType = GenerateType(elementType);
+        string cElementType = _typeGenerator.GenerateType(elementType);
 
         string elements = string.Join(", ", array.Elements.Select(GenerateExpression));
 
@@ -36,4 +36,5 @@ public partial class CodeGenerator
                $"{array.Elements.Count})";
 
     }
+
 }

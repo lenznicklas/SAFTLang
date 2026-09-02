@@ -1,10 +1,10 @@
 using System.Text;
 
-namespace SAFTLang.CodeGenerator;
+namespace SAFTLang.CodeGenerator.Runtime;
 
-public partial class CodeGenerator
+internal static class RuntimeGenerator
 {
-    private void GenerateRuntime(StringBuilder output)
+    public static void GenerateRuntime(StringBuilder output)
     {
         output.AppendLine("typedef struct");
         output.AppendLine("{");
