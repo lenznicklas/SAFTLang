@@ -1,13 +1,14 @@
 using System.Text;
 using SAFTLang.AST.Statements;
 using SAFTLang.CodeGenerator.GenerateExpressions;
+using SAFTLang.CodeGenerator.GenerateFunctions;
 using SAFTLang.CodeGenerator.GenerateStatements;
 using SAFTLang.CodeGenerator.GenerateTypes;
 using SAFTLang.CodeGenerator.Runtime;
 
 namespace SAFTLang.CodeGenerator;
 
-public class CodeGenerator
+public sealed class CodeGenerator
 {
     private readonly FunctionGenerator _functionGenerator;
 
@@ -31,7 +32,7 @@ public class CodeGenerator
         output.AppendLine("#include <stdlib.h>");
         output.AppendLine("#include <string.h>");
         output.AppendLine();
-
+        
         RuntimeGenerator.GenerateRuntime(output);
         
         List<FunctionStatement> functions = statements.OfType<FunctionStatement>().ToList();

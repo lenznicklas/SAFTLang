@@ -4,7 +4,7 @@ using SAFTLang.CodeGenerator.GenerateStatements;
 using SAFTLang.CodeGenerator.GenerateTypes;
 using SAFTLang.CodeGenerator.Utils;
 
-namespace SAFTLang.CodeGenerator;
+namespace SAFTLang.CodeGenerator.GenerateFunctions;
 
 internal sealed class FunctionGenerator
 {

@@ -17,6 +17,11 @@ internal sealed partial class StatementAnalyzer
         {
             foreach (Parameter parameter in functionStatement.Parameters)
             {
+                if (parameter.Type == LangType.Void ||
+                    parameter.Type == LangType.Error)
+                {
+                    _diagnostics.ReportError(parameter.Span, $"Void cannot be assigned as parameter '{parameter.Name}' value");
+                }
                 _state.DeclareVariable(
                     parameter.Name,
                     parameter.Type,

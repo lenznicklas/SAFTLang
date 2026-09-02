@@ -1,6 +1,7 @@
 using SAFTLang.AST.Statements;
 using SAFTLang.AST.Types;
 using SAFTLang.Diagnostics;
+using SAFTLang.Lexer.Text;
 using SAFTLang.SemanticAnalyzer.Symbols;
 
 namespace SAFTLang.SemanticAnalyzer.ProgramValidation;
@@ -20,9 +21,12 @@ internal sealed class ProgramValidator
     {
         if (!_state.TryGetFunction("main", out FunctionSymbol? main))
         {
-            if (statements.Count > 0){
-                _diagnostics.ReportError(statements[0].Span, "Program must define a main function");
-            }
+            SourceSpan span = statements.Count > 0
+                ? statements[0].Span
+                : new SourceSpan(0, 0, 1, 1);
+            
+            _diagnostics.ReportError(span, "Program must define a main function");
+            
             return;
         }
         

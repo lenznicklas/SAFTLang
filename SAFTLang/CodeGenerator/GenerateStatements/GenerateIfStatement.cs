@@ -5,7 +5,7 @@ namespace SAFTLang.CodeGenerator.GenerateStatements;
 
 internal sealed partial class StatementGenerator
 {
-    public void GenerateIf(StringBuilder output, IfStatement ifStatement, string indentation, int indent)
+    private void GenerateIf(StringBuilder output, IfStatement ifStatement, string indentation, int indent)
     {
         output.AppendLine(
             $"{indentation}if " +

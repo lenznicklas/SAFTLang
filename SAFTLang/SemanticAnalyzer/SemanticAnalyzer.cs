@@ -9,7 +9,7 @@ using SAFTLang.SemanticAnalyzer.ProgramValidation;
 
 namespace SAFTLang.SemanticAnalyzer;
 
-public partial class SemanticAnalyzer
+public sealed class SemanticAnalyzer
 {
     private readonly SemanticAnalyzerState _state;
     private readonly StatementAnalyzer _statementAnalyzer;

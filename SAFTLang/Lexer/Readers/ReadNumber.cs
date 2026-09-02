@@ -10,7 +10,7 @@ internal sealed partial class TokenReader
         int line = _state.Line;
         int column = _state.Column;
 
-        while (!_state.IsAtEnd && (char.IsDigit(_state.Current) || _state.Current == '_'))
+        while (!_state.IsAtEnd && (char.IsDigit(_state.Current)))
         {
             _state.Advance();
         }

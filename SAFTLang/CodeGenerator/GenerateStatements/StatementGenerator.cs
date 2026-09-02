@@ -57,7 +57,7 @@ internal sealed partial class StatementGenerator
                 GenerateReturn(output, returnStatement, indentation);
                 break;
             default:
-                throw new Exception($"Unknown statement {statement.GetType().Name}");
+                throw new InvalidOperationException($"Unknown statement {statement.GetType().Name}");
         }
     }
     
