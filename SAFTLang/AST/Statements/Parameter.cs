@@ -1,6 +1,7 @@
+using SAFTLang.AST.Types;
 using SAFTLang.Lexer.Text;
 
-namespace SAFTLang.AST;
+namespace SAFTLang.AST.Statements;
 
 public record Parameter(
     string Name,

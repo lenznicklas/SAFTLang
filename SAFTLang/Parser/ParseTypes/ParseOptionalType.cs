@@ -1,4 +1,5 @@
 using SAFTLang.AST;
+using SAFTLang.AST.Types;
 using SAFTLang.Lexer.TokenAndKeywords;
 
 namespace SAFTLang.Parser.ParseTypes;

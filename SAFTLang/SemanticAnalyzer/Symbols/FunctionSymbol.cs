@@ -1,4 +1,4 @@
-using SAFTLang.AST;
+using SAFTLang.AST.Types;
 
 namespace SAFTLang.SemanticAnalyzer.Symbols;
 

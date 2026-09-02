@@ -1,14 +1,4 @@
-namespace SAFTLang.AST;
-
-public enum LangTypeKind
-{
-    Int,
-    Bool,
-    String,
-    Array,
-    Void,
-    Error
-}
+namespace SAFTLang.AST.Types;
 
 public sealed record LangType(LangTypeKind Kind, LangType? ElementType = null)
 {

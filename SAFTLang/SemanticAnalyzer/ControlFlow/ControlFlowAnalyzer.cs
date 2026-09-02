@@ -1,10 +1,10 @@
-using SAFTLang.AST;
+using SAFTLang.AST.Statements;
 
-namespace SAFTLang.SemanticAnalyzer;
+namespace SAFTLang.SemanticAnalyzer.ControlFlow;
 
-public partial class SemanticAnalyzer
+internal sealed class ControlFlowAnalyzer
 {
-    private bool AlwaysReturns(Statement statement)
+    public bool AlwaysReturns(Statement statement)
     {
         return statement switch
         {
@@ -21,7 +21,7 @@ public partial class SemanticAnalyzer
         };
     }
 
-    private bool BlockAlwaysReturns(BlockStatement block)
+    public bool BlockAlwaysReturns(BlockStatement block)
     {
         foreach (Statement statement in block.Statements)
         {

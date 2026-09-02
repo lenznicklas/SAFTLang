@@ -1,6 +1,5 @@
-using SAFTLang.AST;
+using SAFTLang.AST.Statements;
 using SAFTLang.Diagnostics;
-using SAFTLang.Lexer;
 using SAFTLang.Lexer.TokenAndKeywords;
 
 namespace SAFTLang;

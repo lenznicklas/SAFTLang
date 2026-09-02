@@ -1,96 +1,34 @@
-using SAFTLang.Lexer;
-using SAFTLang.AST;
+using SAFTLang.AST.Expressions;
+using SAFTLang.AST.Statements;
+using SAFTLang.AST.Types;
 using SAFTLang.Diagnostics;
-using SAFTLang.Lexer.Text;
-using SAFTLang.SemanticAnalyzer.Symbols;
+using SAFTLang.SemanticAnalyzer.AnalyzeExpressions;
+using SAFTLang.SemanticAnalyzer.AnalyzeStatements;
+using SAFTLang.SemanticAnalyzer.ControlFlow;
+using SAFTLang.SemanticAnalyzer.ProgramValidation;
 
 namespace SAFTLang.SemanticAnalyzer;
 
 public partial class SemanticAnalyzer
 {
-    private readonly Stack<Dictionary<string, VariableSymbol>> _scopes = new();
-    private readonly Dictionary<string, FunctionSymbol> _functions = new();
-
-    private FunctionStatement? _currentFunction;
-    
-    private readonly Dictionary<Statement, LangType> _statementTypes = new();
-    
-    private readonly Dictionary<Expr, LangType> _expressionTypes = new();
+    private readonly SemanticAnalyzerState _state;
+    private readonly StatementAnalyzer _statementAnalyzer;
+    private readonly ProgramValidator _programValidator;
     
     private readonly DiagnosticBag _diagnostics = new();
     public IReadOnlyList<Diagnostic> Diagnostics => _diagnostics.Diagnostics;
     
     public SemanticAnalyzer()
     {
-        _scopes.Push(new Dictionary<string, VariableSymbol>());
-    }
+        _state = new SemanticAnalyzerState(_diagnostics);
 
-    public LangType GetExpressionType(Expr expr)
-    {
-        if (_expressionTypes.TryGetValue(expr, out LangType? type))
-        {
-            return type;
-        }
-
-        throw new InvalidOperationException(
-            $"No type information for {expr.GetType().Name}"
-        );
-    }
-
-    private void BeginScope()
-    {
-        _scopes.Push(new Dictionary<string, VariableSymbol>());
-    }
-
-    private void EndScope()
-    {
-        if (_scopes.Count == 1)
-        {
-            throw new Exception("Cannot close global scope");
-        }
-        _scopes.Pop();
-    }
-
-    private VariableSymbol? DeclareVariable(
-        string name,
-        LangType type,
-        bool isConst,
-        SourceSpan span)
-    {
-        Dictionary<string, VariableSymbol> currentScope = _scopes.Peek();
-
-        if (currentScope.ContainsKey(name))
-        {
-            _diagnostics.ReportError(
-                span,
-                $"Variable '{name}' is already defined in this scope"
-            );
-            return null;
-        }
+        var expressions = new ExpressionAnalyzer(_state, _diagnostics);
+        var controlFlow = new ControlFlowAnalyzer();
         
-        var symbol = new VariableSymbol(name, type, isConst);
-        
-        currentScope.Add(name, symbol);
-        return symbol;
+        _statementAnalyzer = new StatementAnalyzer(_state, expressions, controlFlow, _diagnostics);
+        _programValidator = new ProgramValidator(_state, _diagnostics);
     }
-
-    private VariableSymbol? ResolveVariable(string name, SourceSpan span)
-    {
-        foreach (Dictionary<string, VariableSymbol> scope in _scopes)
-        {
-            if (scope.TryGetValue(name, out VariableSymbol? symbol))
-            {
-                return symbol;
-            }
-        }
-
-        _diagnostics.ReportError(
-            span,
-            $"Unknown variable '{name}'"
-        );
-
-        return null;
-    }
+    
     public void Analyze(List<Statement> statements)
     {
         foreach (Statement statement in statements)
@@ -101,71 +39,28 @@ public partial class SemanticAnalyzer
             }
             else
             {
-                DeclareFunction(function);
+                _state.DeclareFunction(function);
             }
         }
 
-        ValidateMain(statements);
+        _programValidator.ValidateMain(statements);
 
         foreach (Statement statement in statements)
         {
-            AnalyzeStatement(statement);
+            _statementAnalyzer.AnalyzeStatement(statement);
         }
     }
 
     public LangType GetStatementType(Statement statement)
     {
-        if (!_statementTypes.TryGetValue(
-                statement,
-                out LangType type))
-        {
-            throw new InvalidOperationException(
-                $"Internal compiler error: no type information " +
-                $"for {statement.GetType().Name}"
-            );
-        }
-
-        return type;
+        return _state.GetStatementType(statement);
     }
-
-    private void DeclareFunction(FunctionStatement function)
+    
+    public LangType GetExpressionType(Expr expr)
     {
-        if (_functions.ContainsKey(function.Name))
-        {
-            _diagnostics.ReportError(function.Span,
-                $"Function '{function.Name}' is already defined"
-            );
-            
-            return;
-        }
-
-        var symbol = new FunctionSymbol(
-            function.Name,
-            function.Parameters
-                .Select(parameter => parameter.Type)
-                .ToList(),
-            function.ReturnType
-        );
-        
-        _functions.Add(function.Name, symbol);
+        return _state.GetExpressionType(expr);
     }
 
-    private FunctionSymbol? ResolveFunction(string name, SourceSpan span)
-    {
-        if (_functions.TryGetValue(
-                name,
-                out FunctionSymbol? function))
-        {
-            return function;
-        }
-
-        _diagnostics.ReportError(
-            span,
-            $"Unknown function '{name}'"
-        );
-
-        return null;
-    }
 
 
 }

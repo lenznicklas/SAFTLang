@@ -1,13 +1,24 @@
-using SAFTLang.AST;
+using SAFTLang.AST.Statements;
+using SAFTLang.AST.Types;
+using SAFTLang.Diagnostics;
 using SAFTLang.SemanticAnalyzer.Symbols;
 
-namespace SAFTLang.SemanticAnalyzer;
+namespace SAFTLang.SemanticAnalyzer.ProgramValidation;
 
-public partial class SemanticAnalyzer
+internal sealed class ProgramValidator
 {
-    private void ValidateMain(List<Statement> statements)
+    private readonly SemanticAnalyzerState _state;
+    private readonly DiagnosticBag _diagnostics;
+
+    public ProgramValidator(SemanticAnalyzerState state, DiagnosticBag diagnostics)
     {
-        if (!_functions.TryGetValue("main", out FunctionSymbol? main))
+        _state = state;
+        _diagnostics = diagnostics;
+    }
+    
+    public void ValidateMain(List<Statement> statements)
+    {
+        if (!_state.TryGetFunction("main", out FunctionSymbol? main))
         {
             if (statements.Count > 0){
                 _diagnostics.ReportError(statements[0].Span, "Program must define a main function");
@@ -32,4 +43,5 @@ public partial class SemanticAnalyzer
             }
         }
     }
+
 }

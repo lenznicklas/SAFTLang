@@ -1,5 +1,5 @@
 using System.Text;
-using SAFTLang.AST;
+using SAFTLang.AST.Statements;
 
 namespace SAFTLang.CodeGenerator;
 

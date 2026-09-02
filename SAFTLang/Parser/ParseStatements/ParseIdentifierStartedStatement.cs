@@ -1,6 +1,7 @@
 using SAFTLang.Lexer.TokenAndKeywords;
 using SAFTLang.Lexer.Text;
-using SAFTLang.AST;
+using SAFTLang.AST.Expressions;
+using SAFTLang.AST.Statements;
 
 namespace SAFTLang.Parser.ParseStatements;
 

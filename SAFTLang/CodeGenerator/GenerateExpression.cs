@@ -1,5 +1,4 @@
-using SAFTLang.AST;
-using SAFTLang.Lexer;
+using SAFTLang.AST.Expressions;
 using SAFTLang.Lexer.TokenAndKeywords;
 
 namespace SAFTLang.CodeGenerator;

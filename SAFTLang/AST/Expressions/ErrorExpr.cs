@@ -1,6 +1,6 @@
 using SAFTLang.Lexer.Text;
 
-namespace SAFTLang.AST;
+namespace SAFTLang.AST.Expressions;
 
 public record ErrorExpr(
     SourceSpan Span

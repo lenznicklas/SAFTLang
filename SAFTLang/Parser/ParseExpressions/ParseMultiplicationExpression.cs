@@ -1,4 +1,4 @@
-using SAFTLang.AST;
+using SAFTLang.AST.Expressions;
 using SAFTLang.Lexer.Text;
 using SAFTLang.Lexer.TokenAndKeywords;
 
