@@ -69,6 +69,12 @@ You can also create immutable arrays by changing `let` to `const`
 
 `const arr4 = [1, 2, 3, 4]`
 
+### Comparisons
+
+Comparison between bool, int, string and array is possible
+
+`[1, 2, 3] == [1, 2, 3]` ==> true
+
 ### If/Else
 
 ```
@@ -78,6 +84,36 @@ if x > 10 {
   foo2()
 }
 ```
+
+### for
+
+In SAFT there is no while or never ending loop. You can create them both with `for`.
+
+If you need a never ending loop you can just write:
+
+```
+for {
+  foo()
+}
+```
+
+If you want a classical while statement you can use:
+
+```
+for x > y {
+  foo()
+}
+```
+
+And when you need a foreach loop you can use the regular syntax you might know from Python or C#:
+
+```
+for item in array {
+  foo(item)
+}
+```
+
+Regular for loops, like in C or Java, are not supported yet.
 
 ### Functions
 
