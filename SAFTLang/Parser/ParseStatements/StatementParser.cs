@@ -32,6 +32,7 @@ internal sealed partial class StatementParser
             TokenType.Func => ParseFunctionStatement(),
             TokenType.Return => ParseReturnStatement(),
             TokenType.For => ParseForStatement(),
+            TokenType.Break => ParseBreakStatement(),
             
             _ =>  UnexpectedToken(_state.Current)
         };

@@ -17,12 +17,28 @@ internal sealed partial class StatementAnalyzer
                 $"If condition must be Bool, got {conditionType}"
             );
         }
-        
-        AnalyzeBlockStatement(statement.thenBody);
+
+        _loopDepth++;
+        try
+        {
+            AnalyzeBlockStatement(statement.thenBody);
+        }
+        finally
+        {
+            _loopDepth--;
+        }
 
         if (statement.elseBody is not null)
         {
-            AnalyzeBlockStatement(statement.elseBody);
+            _loopDepth++;
+            try
+            {
+                AnalyzeBlockStatement(statement.elseBody);
+            }
+            finally
+            {
+                _loopDepth--;
+            }
         }
     }
 

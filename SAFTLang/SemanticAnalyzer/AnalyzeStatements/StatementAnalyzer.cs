@@ -12,6 +12,7 @@ internal sealed partial class StatementAnalyzer
     private readonly ExpressionAnalyzer _expressionAnalyzer;
     private readonly ControlFlowAnalyzer _controlFlow;
     private readonly DiagnosticBag _diagnostics;
+    private int _loopDepth;
 
     public StatementAnalyzer(SemanticAnalyzerState state, ExpressionAnalyzer expressionAnalyzer,
         ControlFlowAnalyzer controlFlow, DiagnosticBag diagnostics)
@@ -69,6 +70,10 @@ internal sealed partial class StatementAnalyzer
             
             case ForEachStatement stmt:
                 AnalyzeForEachStatement(stmt);
+                break;
+            
+            case BreakStatement stmt:
+                AnalyzeBreakStatement(stmt);
                 break;
             
             default:

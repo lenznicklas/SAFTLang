@@ -17,7 +17,15 @@ internal sealed partial class StatementAnalyzer
                 _diagnostics.ReportError(forStatement.Span, "Condition must be of type bool");
             }
         }
-        
-        AnalyzeBlockStatement(forStatement.Body);
+
+        _loopDepth++;
+        try
+        {
+            AnalyzeBlockStatement(forStatement.Body);
+        }
+        finally
+        {
+            _loopDepth--;
+        }
     }
 }

@@ -85,7 +85,7 @@ if x > 10 {
 }
 ```
 
-### for
+### For
 
 In SAFT there is no while or never ending loop. You can create them both with `for`.
 

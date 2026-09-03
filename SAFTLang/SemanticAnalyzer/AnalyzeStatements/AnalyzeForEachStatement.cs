@@ -16,7 +16,7 @@ internal sealed partial class StatementAnalyzer
         }
         
         _state.BeginScope();
-
+        _loopDepth++;
         try
         {
             _state.DeclareVariable(stmt.VariableName, iter.ElementType, false, stmt.Span);
@@ -28,6 +28,7 @@ internal sealed partial class StatementAnalyzer
         }
         finally
         {
+            _loopDepth--;
             _state.EndScope();
         }
         
