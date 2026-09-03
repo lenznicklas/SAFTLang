@@ -56,6 +56,11 @@ internal sealed partial class StatementGenerator
             case ReturnStatement returnStatement:
                 GenerateReturn(output, returnStatement, indentation);
                 break;
+            
+            case ForStatement forStatement:
+                GenerateFor(output, forStatement, indentation, indent);
+                break;
+            
             default:
                 throw new InvalidOperationException($"Unknown statement {statement.GetType().Name}");
         }

@@ -7,7 +7,11 @@ internal sealed partial class StatementGenerator
 {
     private void GenerateFor(StringBuilder output, ForStatement forStatement, string indentation, int indent)
     {
-        output.AppendLine($"{indentation}while (true)");
+        string condition = forStatement.Condition is null
+                ? "true"
+                : _expressionGenerator.GenerateExpression(forStatement.Condition);
+        
+        output.AppendLine($"{indentation}while ({condition})");
         GenerateBlock(output, forStatement.Block, indent);
     }
 }

@@ -18,5 +18,7 @@ public static class KeywordsDict
             ["return"] = TokenType.Return,
             ["func"] = TokenType.Func,
             ["for"] = TokenType.For,
+            ["in"] = TokenType.In,
+            ["break"] = TokenType.Break,
         };
 }

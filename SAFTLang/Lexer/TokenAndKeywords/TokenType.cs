@@ -11,6 +11,8 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         Func,
         Return,
         For,
+        In,
+        Break,
         
         True,
         False,
