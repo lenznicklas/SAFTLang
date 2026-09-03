@@ -60,6 +60,18 @@ internal sealed partial class ExpressionAnalyzer
                 }
 
                 return LangType.Bool;
+            case TokenType.And:
+            case TokenType.Or:
+                if (!RequireTypes(
+                        binary.Operator,
+                        leftType,
+                        rightType,
+                        LangType.Bool,
+                        binary.Span))
+                {
+                    return LangType.Error;
+                }
+                return LangType.Bool;
             default:
                 _diagnostics.ReportError(
                     binary.Span,

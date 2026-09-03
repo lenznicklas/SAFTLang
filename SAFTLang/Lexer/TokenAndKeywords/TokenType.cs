@@ -14,6 +14,9 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         In,
         Break,
         
+        And,
+        Or,
+        
         True,
         False,
         

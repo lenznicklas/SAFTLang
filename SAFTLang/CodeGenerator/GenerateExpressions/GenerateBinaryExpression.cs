@@ -32,6 +32,9 @@ internal sealed partial class ExpressionGenerator
             TokenType.LessEqual => "<=",
             TokenType.Greater => ">",
             TokenType.GreaterEqual => ">=",
+            
+            TokenType.And => "&&",
+            TokenType.Or => "||",
 
             _ => throw new InvalidOperationException($"Unknown operator: {binary.Operator}")
         };

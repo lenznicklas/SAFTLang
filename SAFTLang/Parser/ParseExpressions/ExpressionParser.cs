@@ -18,7 +18,7 @@ internal sealed partial class ExpressionParser
 
     public Expr ParseExpression()
     {
-        return ParseEquality();
+        return ParseOr();
     }
     
     private Expr FinishCall(Expr callee)
