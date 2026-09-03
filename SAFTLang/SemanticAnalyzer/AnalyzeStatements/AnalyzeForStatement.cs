@@ -15,7 +15,6 @@ internal sealed partial class StatementAnalyzer
                 conditionType != LangType.Error)
             {
                 _diagnostics.ReportError(forStatement.Span, "Condition must be of type bool");
-                return;
             }
         }
         
