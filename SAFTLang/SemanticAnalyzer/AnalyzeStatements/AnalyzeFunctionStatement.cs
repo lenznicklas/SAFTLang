@@ -21,6 +21,7 @@ internal sealed partial class StatementAnalyzer
                     parameter.Type == LangType.Error)
                 {
                     _diagnostics.ReportError(parameter.Span, $"Void cannot be assigned as parameter '{parameter.Name}' value");
+                    continue;
                 }
                 _state.DeclareVariable(
                     parameter.Name,

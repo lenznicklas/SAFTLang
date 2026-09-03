@@ -21,7 +21,7 @@ internal sealed partial class ExpressionGenerator
 
         string cElementType = _typeGenerator.GenerateType(elementType);
 
-        string eqalityFunction = _typeGenerator.GenerateEqualityFunction(elementType);
+        string equalityFunction = _typeGenerator.GenerateEqualityFunction(elementType);
         
         if (array.Elements.Count == 0)
         {
@@ -29,7 +29,7 @@ internal sealed partial class ExpressionGenerator
                    "NULL, " +
                    $"sizeof({cElementType})," +
                    $"0, " +
-                   $"{eqalityFunction})";
+                   $"{equalityFunction})";
         }
 
         string elements = string.Join(", ", array.Elements.Select(GenerateExpression));
@@ -38,7 +38,7 @@ internal sealed partial class ExpressionGenerator
                $"({cElementType}[]){{{elements}}}, " +
                $"sizeof({cElementType}), " +
                $"{array.Elements.Count}," +
-               $"{eqalityFunction})";
+               $"{equalityFunction})";
 
     }
 

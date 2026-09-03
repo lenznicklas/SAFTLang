@@ -27,14 +27,12 @@ internal sealed partial class ExpressionGenerator
             TokenType.Star => "*",
             TokenType.Slash => "/",
                 
-            TokenType.EqualEqual => "==",
-            TokenType.NotEqual => "!=",
             TokenType.Less => "<",
             TokenType.LessEqual => "<=",
             TokenType.Greater => ">",
             TokenType.GreaterEqual => ">=",
 
-            _ => throw new Exception($"Unknown operator: {binary.Operator}")
+            _ => throw new InvalidOperationException($"Unknown operator: {binary.Operator}")
         };
         return $"({left} {op} {right})";
         

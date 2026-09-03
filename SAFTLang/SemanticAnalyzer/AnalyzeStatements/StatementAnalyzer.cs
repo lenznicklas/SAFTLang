@@ -48,6 +48,7 @@ internal sealed partial class StatementAnalyzer
                 if (_state.CurrentFunction is not null)
                 {
                     _diagnostics.ReportError(stmt.Span, "Cannot create a function inside of a function");
+                    break;
                 }
                 AnalyzeFunctionStatement(stmt);
                 break;
