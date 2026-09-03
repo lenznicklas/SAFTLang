@@ -69,24 +69,31 @@ If you want to change a value in a mutable array:
 
 `arr[0] = 10`
 
-You can also create immutable arrays by changing `let` to `const`
+You can also create immutable arrays by changing `let` to `const`.
 
 `const arr4 = [1, 2, 3, 4]`
 
 ### Comparisons
 
-Comparison between bool, int, string and array is possible
+Comparison between bool, int, string and array is possible.
 
 `[1, 2, 3] == [1, 2, 3]` ==> true
 
-Unary expression `!` is also possible
+Unary expression `!` is also possible:
 
 ```
 let x = true
 let y = !x
 ```
 
-Variable y is `false`
+If you want the `and` or the `or` operator you can use them written like this:
+
+```
+if x and y{}
+if x or y{}
+```
+
+Variable y is `false`.
 
 ### If/Else
 
@@ -159,4 +166,4 @@ func foo() int {
 }
 ```
 
-You can call a function by simply using: `foo()`
+You can call a function by simply using: `foo()`.
