@@ -17,5 +17,6 @@ public static class KeywordsDict
             ["void"] = TokenType.VoidType,
             ["return"] = TokenType.Return,
             ["func"] = TokenType.Func,
+            ["for"] = TokenType.For,
         };
 }

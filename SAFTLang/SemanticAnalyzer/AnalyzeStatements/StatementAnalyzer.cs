@@ -29,21 +29,27 @@ internal sealed partial class StatementAnalyzer
             case LetStatement stmt:
                 AnalyzeLetStatement(stmt);
                 break;
+            
             case ConstStatement stmt:
                 AnalyzeConstStatement(stmt);
                 break;
+            
             case IfStatement stmt:
                 AnalyzeIfStatement(stmt);
                 break;
+            
             case BlockStatement stmt:
                 AnalyzeBlockStatement(stmt);
                 break;
+            
             case AssignmentStatement stmt:
                 AnalyzeAssignmentStatement(stmt);
                 break;
+            
             case ExpressionStatement stmt:
                 _expressionAnalyzer.AnalyzeExpression(stmt.Expression);
                 break;
+            
             case FunctionStatement stmt:
                 if (_state.CurrentFunction is not null)
                 {
@@ -52,9 +58,15 @@ internal sealed partial class StatementAnalyzer
                 }
                 AnalyzeFunctionStatement(stmt);
                 break;
+            
             case ReturnStatement stmt:
                 AnalyzeReturnStatement(stmt);
                 break;
+            
+            case ForStatement stmt:
+                AnalyzeForStatement(stmt);
+                break;
+            
             default:
                 _diagnostics.ReportError(
                     statement.Span,

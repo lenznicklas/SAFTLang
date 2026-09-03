@@ -10,6 +10,7 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         Else,
         Func,
         Return,
+        For,
         
         True,
         False,
