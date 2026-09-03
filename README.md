@@ -37,6 +37,10 @@ func main() void {
 
 `let b2 = s < 1` ==> error
 
+Negative numbers are also supported.
+
+`let n = -1` ==> still an int
+
 Also possible as a constant instead of a changeable variable.
 
 `const pi = 5`
@@ -74,6 +78,15 @@ You can also create immutable arrays by changing `let` to `const`
 Comparison between bool, int, string and array is possible
 
 `[1, 2, 3] == [1, 2, 3]` ==> true
+
+Unary expression `!` is also possible
+
+```
+let x = true
+let y = !x
+```
+
+Variable y is `false`
 
 ### If/Else
 
