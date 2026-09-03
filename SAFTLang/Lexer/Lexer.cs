@@ -112,6 +112,11 @@ namespace SAFTLang.Lexer;
                             _state.CreateSimpleToken(TokenType.Slash, "/", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
+                    case '%':
+                        tokens.Add(
+                            _state.CreateSimpleToken(TokenType.Modulo, "%", tokenStart, tokenLine, tokenColumn)
+                        );
+                        break;
                     case '=':
                         if (_state.Peek == '=')
                         {

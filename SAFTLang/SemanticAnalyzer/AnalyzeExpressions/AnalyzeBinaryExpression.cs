@@ -17,6 +17,7 @@ internal sealed partial class ExpressionAnalyzer
             case TokenType.Minus:
             case TokenType.Star:
             case TokenType.Slash:
+            case TokenType.Modulo:
                 if (!RequireTypes(binary.Operator, leftType, rightType, LangType.Int, binary.Span))
                 {
                     return LangType.Error;

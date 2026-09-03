@@ -10,7 +10,9 @@ internal sealed partial class ExpressionParser
     {
         Expr left = ParsePostfix();
 
-        while (_state.Current.Type == TokenType.Star || _state.Current.Type == TokenType.Slash)
+        while (_state.Current.Type == TokenType.Star || 
+               _state.Current.Type == TokenType.Slash ||
+               _state.Current.Type == TokenType.Modulo)
         {
             TokenType op = _state.Current.Type;
             _state.Advance();

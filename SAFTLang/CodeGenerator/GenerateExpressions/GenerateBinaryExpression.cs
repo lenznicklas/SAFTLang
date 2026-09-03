@@ -26,6 +26,7 @@ internal sealed partial class ExpressionGenerator
             TokenType.Minus => "-",
             TokenType.Star => "*",
             TokenType.Slash => "/",
+            TokenType.Modulo => "%",
                 
             TokenType.Less => "<",
             TokenType.LessEqual => "<=",
