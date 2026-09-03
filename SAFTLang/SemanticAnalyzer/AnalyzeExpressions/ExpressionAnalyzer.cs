@@ -40,6 +40,8 @@ internal sealed partial class ExpressionAnalyzer
                 AnalyzeIndex(index),
             ErrorExpr =>
                 LangType.Error,
+            UnaryExpr unary =>
+                AnalyzeUnary(unary),
             _ => ReportUnknownExpression(expr)
         
         };

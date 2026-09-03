@@ -44,6 +44,9 @@ internal sealed partial class ExpressionGenerator
             
             IndexExpr index =>
                 GenerateIndexExpression(index),
+            
+            UnaryExpr unary =>
+                GenerateUnaryExpression(unary),
 
             _ => throw new InvalidOperationException($"Unknown expression {expr.GetType().Name}")
         };

@@ -245,14 +245,8 @@ namespace SAFTLang.Lexer;
                         }
                         else
                         {
-                            _diagnostics.ReportError(
-                                new SourceSpan(
-                                    tokenStart,
-                                    1,
-                                    tokenLine,
-                                    tokenColumn
-                                ),
-                                $"Unexpected character {_state.Current}"
+                            tokens.Add(
+                                _state.CreateSimpleToken(TokenType.Not, "!", tokenStart, tokenLine, tokenColumn)
                             );
                         }
 

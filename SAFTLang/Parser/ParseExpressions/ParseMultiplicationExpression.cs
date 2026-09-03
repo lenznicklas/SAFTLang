@@ -8,7 +8,7 @@ internal sealed partial class ExpressionParser
 {
     private Expr ParseMultiplication()
     {
-        Expr left = ParsePostfix();
+        Expr left = ParseUnary();
 
         while (_state.Current.Type == TokenType.Star || 
                _state.Current.Type == TokenType.Slash ||
@@ -16,7 +16,7 @@ internal sealed partial class ExpressionParser
         {
             TokenType op = _state.Current.Type;
             _state.Advance();
-            Expr right = ParsePostfix();
+            Expr right = ParseUnary();
             
             left = new BinaryExpr(left, op, right, SourceSpan.Combine(left.Span, right.Span));
         }

@@ -29,6 +29,7 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         Star,
         Slash,
         Modulo,
+        Not,
 
         Equal,
         Semicolon,
