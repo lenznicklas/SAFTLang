@@ -15,7 +15,8 @@ internal sealed partial class StatementParser
         BlockStatement block;
         SourceSpan span;
 
-        if (_state.Current.Type != TokenType.LBrace)
+        if (_state.Current.Type != TokenType.LBrace &&
+            _state.Peek(1).Type != TokenType.In)
         {
             condition = _expressionParser.ParseExpression();
             block = ParseBlockStatement();
