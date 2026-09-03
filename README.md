@@ -115,6 +115,20 @@ for item in array {
 
 Regular for loops, like in C or Java, are not supported yet.
 
+### Break
+
+The keyword break can be used to stop for-loops at any given moment:
+
+```
+for {
+  if x > y {
+    foo()
+    break
+  }
+}
+```
+
+
 ### Functions
 
 ```
