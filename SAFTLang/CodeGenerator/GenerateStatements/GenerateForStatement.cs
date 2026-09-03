@@ -12,6 +12,6 @@ internal sealed partial class StatementGenerator
                 : _expressionGenerator.GenerateExpression(forStatement.Condition);
         
         output.AppendLine($"{indentation}while ({condition})");
-        GenerateBlock(output, forStatement.Block, indent);
+        GenerateBlock(output, forStatement.Body, indent);
     }
 }

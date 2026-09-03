@@ -24,6 +24,18 @@ internal sealed partial class StatementParser
             return new ForStatement(condition, block, span);
         }
 
+        if (_state.Current.Type == TokenType.Identifier &&
+            _state.Peek(1).Type == TokenType.In)
+        {
+            Expr ident = _expressionParser.ParseExpression();
+            _state.Consume(TokenType.In);
+            Expr iter = _expressionParser.ParseExpression();
+            block = ParseBlockStatement();
+            span = SourceSpan.Combine(forToken.Span, block.Span);
+            
+            return new ForEachStatement(ident.ToString(),  iter, block, span);
+        }
+
         block = ParseBlockStatement();
         span = SourceSpan.Combine(forToken.Span, block.Span);
         

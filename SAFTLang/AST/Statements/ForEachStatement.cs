@@ -3,8 +3,9 @@ using SAFTLang.Lexer.Text;
 
 namespace SAFTLang.AST.Statements;
 
-public record ForStatement(
-    Expr? Condition,
+public record ForEachStatement(
+    string VariableName,
+    Expr Iterable,
     BlockStatement Body,
     SourceSpan Span
     ) : Statement(Span);

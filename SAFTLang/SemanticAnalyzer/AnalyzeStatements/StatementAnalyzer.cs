@@ -67,6 +67,10 @@ internal sealed partial class StatementAnalyzer
                 AnalyzeForStatement(stmt);
                 break;
             
+            case ForEachStatement stmt:
+                AnalyzeForEachStatement(stmt);
+                break;
+            
             default:
                 _diagnostics.ReportError(
                     statement.Span,

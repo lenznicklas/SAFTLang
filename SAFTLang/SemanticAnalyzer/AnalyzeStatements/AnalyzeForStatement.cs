@@ -19,6 +19,6 @@ internal sealed partial class StatementAnalyzer
             }
         }
         
-        AnalyzeBlockStatement(forStatement.Block);
+        AnalyzeBlockStatement(forStatement.Body);
     }
 }

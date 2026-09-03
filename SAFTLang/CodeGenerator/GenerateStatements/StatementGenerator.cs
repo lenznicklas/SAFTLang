@@ -61,6 +61,10 @@ internal sealed partial class StatementGenerator
                 GenerateFor(output, forStatement, indentation, indent);
                 break;
             
+            case ForEachStatement forEachStatement:
+                GenerateForEach(output, forEachStatement, indentation, indent);
+                break;
+            
             default:
                 throw new InvalidOperationException($"Unknown statement {statement.GetType().Name}");
         }
