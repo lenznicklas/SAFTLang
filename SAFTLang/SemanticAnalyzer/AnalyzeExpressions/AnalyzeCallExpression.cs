@@ -40,6 +40,11 @@ internal sealed partial class ExpressionAnalyzer
             return AnalyzeLenCall(call);
         }
 
+        if (identifier.Name == "append")
+        {
+            return AnalyzeAppendCall(call);
+        }
+
         FunctionSymbol? function = _state.ResolveFunction(identifier.Name, identifier.Span);
 
         if (function is null)

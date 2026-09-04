@@ -18,6 +18,11 @@ internal sealed partial class ExpressionGenerator
             {
                 return GenerateLenCall(call);
             }
+
+            if (ident.Name == "append")
+            {
+                return GenerateAppendCall(call);
+            }
         }
         
         
