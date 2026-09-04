@@ -6,17 +6,23 @@ internal sealed partial class ExpressionGenerator
 {
     private string GenerateCallExpression(CallExpr call)
     {
-        string callee;
 
-        if (call.Callee is IdentifierExpr ident &&
-            ident.Name == "print")
+        if (call.Callee is IdentifierExpr ident)
         {
-            return GeneratePrintCall(call);
+            if (ident.Name == "print")
+            {
+                return GeneratePrintCall(call);
+            }
+
+            if (ident.Name == "len")
+            {
+                return GenerateLenCall(call);
+            }
         }
-        else
-        {
-            callee = GenerateExpression(call.Callee);
-        }
+        
+        
+        string callee = GenerateExpression(call.Callee);
+        
         
         string arguments = string.Join(
             ", ",

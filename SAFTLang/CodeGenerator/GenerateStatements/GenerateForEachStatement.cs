@@ -65,7 +65,7 @@ internal sealed partial class StatementGenerator
         output.AppendLine(
             $"{innerIndentation}" +
             "for (int saftc_index = 0; " +
-            "saftc_index < saftc_iterable.length; " +
+            "saftc_index < (int)saft_array_len(saftc_iterable); " +
             "saftc_index++)"
         );
 

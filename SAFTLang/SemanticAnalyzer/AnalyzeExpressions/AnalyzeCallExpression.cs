@@ -35,6 +35,11 @@ internal sealed partial class ExpressionAnalyzer
             return LangType.Void;
         }
 
+        if (identifier.Name == "len")
+        {
+            AnalyzeLenCall(call);
+        }
+
         FunctionSymbol? function = _state.ResolveFunction(identifier.Name, identifier.Span);
 
         if (function is null)
