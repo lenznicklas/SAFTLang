@@ -24,7 +24,8 @@ internal sealed partial class ExpressionAnalyzer
             return LangType.Error;
         }
 
-        if (arrayType.Kind != LangTypeKind.Array)
+        if (arrayType.Kind != LangTypeKind.Array ||
+            arrayType.ElementType is null)
         {
             _diagnostics.ReportError(call.Arguments[0].Span, "First argument must be an array");
             return LangType.Error;
@@ -39,6 +40,7 @@ internal sealed partial class ExpressionAnalyzer
             if (symbol?.IsConst == true)
             {
                 _diagnostics.ReportError(arrayExpr.Span, $"Cannot modify const array '{root.Name}'");
+                return LangType.Error;
             }
         }
 

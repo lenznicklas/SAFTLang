@@ -29,6 +29,6 @@ internal sealed partial class ExpressionGenerator
         return
             $"saft_array_append(" +
             $"{array}, " +
-            $"({cElementType}[]){{{value}}}";
+            $"({cElementType}[]){{{value}}})";
     }
 }

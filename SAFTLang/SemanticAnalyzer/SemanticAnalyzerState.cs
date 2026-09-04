@@ -87,11 +87,13 @@ internal sealed class SemanticAnalyzerState
         if (function.Name == "len")
         {
             _diagnostics.ReportError(function.Span, "Function len is already defined");
+            return;
         }
 
         if (function.Name == "append")
         {
             _diagnostics.ReportError(function.Span, "Function append is already defined");
+            return;
         }
         if (_functions.ContainsKey(function.Name))
         {
