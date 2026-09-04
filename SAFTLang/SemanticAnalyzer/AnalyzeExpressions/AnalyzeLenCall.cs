@@ -15,16 +15,17 @@ internal sealed partial class ExpressionAnalyzer
 
         LangType type = AnalyzeExpression(call.Arguments[0]);
 
+        if (type == LangType.Error)
+        {
+            return LangType.Error;
+        }
+        
         if (type.Kind != LangTypeKind.Array)
         {
             _diagnostics.ReportError(call.Arguments[0].Span, "'len' can only have arrays as argument");
             return LangType.Error;
         }
 
-        if (type == LangType.Error)
-        {
-            return LangType.Error;
-        }
 
         return LangType.Int;
     }

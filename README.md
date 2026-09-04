@@ -73,6 +73,10 @@ You can also create immutable arrays by changing `let` to `const`.
 
 `const arr4 = [1, 2, 3, 4]`
 
+The length of an array can be used with the `len` function:
+
+`let length = len(arr4)` ==> int
+
 ### Comparisons
 
 Comparison between bool, int, string and array is possible.

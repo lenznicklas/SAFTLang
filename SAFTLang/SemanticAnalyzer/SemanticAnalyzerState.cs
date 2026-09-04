@@ -84,6 +84,10 @@ internal sealed class SemanticAnalyzerState
     
     public void DeclareFunction(FunctionStatement function)
     {
+        if (function.Name == "len")
+        {
+            _diagnostics.ReportError(function.Span, "Function len is already defined");
+        }
         if (_functions.ContainsKey(function.Name))
         {
             _diagnostics.ReportError(function.Span,
