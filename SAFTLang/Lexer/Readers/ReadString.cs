@@ -13,9 +13,7 @@ internal sealed partial class TokenReader
         int column = _state.Column;
         
         _state.Advance();
-
-        int valueStart = _state.Position;
-
+        
         var value = new StringBuilder();
 
         bool hasError = false;
