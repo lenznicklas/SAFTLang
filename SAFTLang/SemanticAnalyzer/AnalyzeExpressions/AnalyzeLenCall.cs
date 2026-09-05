@@ -20,9 +20,9 @@ internal sealed partial class ExpressionAnalyzer
             return LangType.Error;
         }
         
-        if (type.Kind != LangTypeKind.Array)
+        if (type.Kind != LangTypeKind.Array && type != LangType.String)
         {
-            _diagnostics.ReportError(call.Arguments[0].Span, "'len' can only have arrays as argument");
+            _diagnostics.ReportError(call.Arguments[0].Span, "'len' can only have arrays and strings as argument");
             return LangType.Error;
         }
 
