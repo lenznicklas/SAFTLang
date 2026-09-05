@@ -41,7 +41,7 @@ internal sealed partial class StatementGenerator
             );
 
         string variableName =
-            CCodeUtils.GenerateIdentifier(
+            CCodeUtils.GenerateVariableIdentifier(
                 forEachStatement.VariableName
             );
 

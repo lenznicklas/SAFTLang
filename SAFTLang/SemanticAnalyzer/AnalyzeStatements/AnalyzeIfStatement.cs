@@ -18,27 +18,12 @@ internal sealed partial class StatementAnalyzer
             );
         }
 
-        _loopDepth++;
-        try
-        {
-            AnalyzeBlockStatement(statement.thenBody);
-        }
-        finally
-        {
-            _loopDepth--;
-        }
+        AnalyzeBlockStatement(statement.thenBody);
+        
 
         if (statement.elseBody is not null)
         {
-            _loopDepth++;
-            try
-            {
-                AnalyzeBlockStatement(statement.elseBody);
-            }
-            finally
-            {
-                _loopDepth--;
-            }
+            AnalyzeBlockStatement(statement.elseBody);
         }
     }
 

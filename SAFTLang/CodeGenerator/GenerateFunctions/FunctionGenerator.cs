@@ -21,7 +21,7 @@ internal sealed class FunctionGenerator
     {
         string returnType = _typeGenerator.GenerateType(function.ReturnType);
 
-        string name = CCodeUtils.GenerateIdentifier(function.Name);
+        string name = CCodeUtils.GenerateFunctionIdentifier(function.Name);
 
         string parameters;
 

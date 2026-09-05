@@ -9,9 +9,18 @@ internal static class CCodeUtils
             .Replace("\"", "\\\"");
     }
 
-    public static string GenerateIdentifier(string name)
+    public static string GenerateVariableIdentifier(string name)
     {
-        return $"saft_{name}";
+        return $"saft_v_{name}";
+    }
+    
+    public static string GenerateFunctionIdentifier(string name)
+    {
+        return $"saft_f_{name}";
     }
 
+    public static string GenerateIdentifier(string name)
+    {
+        return $"saft_i_{name}";
+    }
 }

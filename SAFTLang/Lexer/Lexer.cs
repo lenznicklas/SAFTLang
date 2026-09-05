@@ -263,7 +263,7 @@ namespace SAFTLang.Lexer;
                         {
                             _state.Advance();
                         }
-                        break;
+                        continue;
                     default:
                     {
                         _diagnostics.ReportError(

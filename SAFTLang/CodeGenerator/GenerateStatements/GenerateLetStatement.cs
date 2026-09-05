@@ -11,7 +11,7 @@ internal sealed partial class StatementGenerator
         output.AppendLine(
             $"{indentation}" +
             $"{_typeGenerator.GenerateType(_analyzer.GetStatementType(let))} " +
-            $"{CCodeUtils.GenerateIdentifier(let.Name)} = {_expressionGenerator.GenerateExpression(let.Value)};"
+            $"{CCodeUtils.GenerateVariableIdentifier(let.Name)} = {_expressionGenerator.GenerateExpression(let.Value)};"
         );
     }
 }
