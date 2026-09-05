@@ -20,7 +20,7 @@ internal sealed partial class TokenReader
             _state.Advance();
         }
 
-        if (_state.IsAtEnd)
+        if (_state.IsAtEnd || _state.Current == '\n')
         {
             _diagnostics.ReportError(
                 new SourceSpan(start, _state.Position - start, line, column),

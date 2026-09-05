@@ -22,7 +22,17 @@ internal sealed partial class StatementParser
         if (_state.Current.Type == TokenType.Else)
         {
             _state.Consume(TokenType.Else);
-            elseBody = ParseBlockStatement();
+
+            if (_state.Current.Type == TokenType.If)
+            {
+                Statement ifElse = ParseIfStatement();
+                
+                elseBody = new BlockStatement(new List<Statement>{ifElse}, ifElse.Span);
+            }
+            else
+            {
+                elseBody = ParseBlockStatement();
+            }
         }
 
         SourceSpan lastSpan = elseBody?.Span ?? thenBody.Span;
