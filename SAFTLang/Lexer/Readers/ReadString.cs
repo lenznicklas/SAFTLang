@@ -15,9 +15,17 @@ internal sealed partial class TokenReader
 
         int valueStart = _state.Position;
         
-        while (!_state.IsAtEnd && _state.Current != '"')
+        while (!_state.IsAtEnd && _state.Current != '"' && _state.Current != '\n')
         {
             _state.Advance();
+        }
+
+        if (_state.IsAtEnd)
+        {
+            _diagnostics.ReportError(
+                new SourceSpan(start, _state.Position - start, line, column),
+                "Unterminated string"
+            );
         }
 
         if (_state.IsAtEnd)
