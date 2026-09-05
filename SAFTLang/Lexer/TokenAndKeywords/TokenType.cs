@@ -55,5 +55,7 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         StringType,
         VoidType,
         
+        CommentHashtag,
+        
         BadToken,
     }

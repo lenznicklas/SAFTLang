@@ -256,6 +256,20 @@ namespace SAFTLang.Lexer;
                             _state.CreateSimpleToken(TokenType.Comma, ",", tokenStart, tokenLine, tokenColumn)
                         );
                         break;
+                    
+                    case '#':
+                        tokens.Add(
+                            _state.CreateSimpleToken(TokenType.CommentHashtag, "#", tokenStart, tokenLine, tokenColumn)
+                        );
+                        while (_state.Current != '\n')
+                        {
+                            _state.Advance();
+                        }
+
+                        tokens.Add(
+                            _state.CreateSimpleToken(TokenType.Newline, "\\n", tokenStart, tokenLine, tokenColumn)
+                        );
+                        break;
                     default:
                     {
                         _diagnostics.ReportError(
