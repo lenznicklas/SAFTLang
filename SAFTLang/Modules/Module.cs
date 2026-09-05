@@ -1,16 +1,18 @@
+using SAFTLang.AST.Statements;
+
 namespace SAFTLang.Modules;
 
 public sealed class Module
 {
     public IReadOnlyList<string> Path  { get; }
-    public IReadOnlyList<string> Statements { get; }
+    public IReadOnlyList<Statement> Statements { get; }
     public List<ImportBinding> Imports { get; } = [];
 
     public string Name => Path[^1];
     
     public string FullName => string.Join("::", Path);
 
-    public Module(IReadOnlyList<string> path, IReadOnlyList<string> statements)
+    public Module(IReadOnlyList<string> path, IReadOnlyList<Statement> statements)
     {
         if (path.Count == 0)
         {

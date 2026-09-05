@@ -43,7 +43,7 @@ internal sealed class ImportBinder
 
         foreach (string member in import.Members!)
         {
-            AddBinding(module, new ImportBinding(member, import.Path, null), import);
+            AddBinding(module, new ImportBinding(member, import.Path, member), import);
         }
     }
 
