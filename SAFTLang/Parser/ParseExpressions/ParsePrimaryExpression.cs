@@ -45,6 +45,15 @@ internal sealed partial class ExpressionParser
             );
         }
 
+        if (token.Type == TokenType.Char)
+        {
+            _state.Advance();
+            return new CharExpr(
+                token.Value[0],
+                token.Span
+            );
+        }
+
         if (token.Type == TokenType.Identifier)
         {
             _state.Advance();

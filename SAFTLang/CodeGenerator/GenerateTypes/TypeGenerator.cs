@@ -11,6 +11,7 @@ internal sealed class TypeGenerator
             LangTypeKind.Int => "int",
             LangTypeKind.Bool => "bool",
             LangTypeKind.String => "const char*",
+            LangTypeKind.Char => "char",
             LangTypeKind.Void => "void",
             LangTypeKind.Array => "saft_array",
             _ => throw new InvalidOperationException($"Unknown type {type}")
@@ -24,6 +25,7 @@ internal sealed class TypeGenerator
             LangTypeKind.Int => "saft_equal_int",
             LangTypeKind.Bool => "saft_equal_bool",
             LangTypeKind.String => "saft_equal_string",
+            LangTypeKind.Char => "saft_equal_char",
             LangTypeKind.Array => "saft_equal_array",
 
             _ => throw new InvalidOperationException($"Type {type} is not comparable")

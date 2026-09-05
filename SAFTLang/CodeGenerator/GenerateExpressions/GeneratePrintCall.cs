@@ -19,6 +19,8 @@ internal sealed partial class ExpressionGenerator
             
             LangTypeKind.String => $"printf(\"%s\\n\", {GenerateExpression(expr)})",
             
+            LangTypeKind.Char => $"printf(\"%c\\n\", {value})",
+            
             LangTypeKind.Int => $"printf(\"%d\\n\", {GenerateExpression(expr)})",
             
             _ => $"printf(\"%d\\n\", {GenerateExpression(expr)})"

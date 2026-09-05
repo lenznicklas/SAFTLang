@@ -180,6 +180,16 @@ internal static class RuntimeGenerator
                     right_value
                 ) == 0;
             }
+            
+            static bool saft_equal_char(
+                const void* left,
+                const void* right
+            )
+            {
+                return 
+                    *(const char*)left ==
+                    *(const char*)right;
+            }
 
 
             static bool saft_equal_array(

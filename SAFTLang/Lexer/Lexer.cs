@@ -83,6 +83,12 @@ namespace SAFTLang.Lexer;
                     continue;
                 }
 
+                if (c == '\'')
+                {
+                    tokens.Add(_reader.ReadChar());
+                    continue;
+                }
+
                 // Identifier / Keywords
                 if (char.IsLetter(c) || c == '_')
                 {

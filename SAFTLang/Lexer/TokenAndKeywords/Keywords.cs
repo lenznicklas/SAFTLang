@@ -13,6 +13,7 @@ public static class KeywordsDict
             ["int"] = TokenType.IntType,
             ["string"] = TokenType.StringType,
             ["bool"] = TokenType.BoolType,
+            ["char"] = TokenType.CharType,
             ["else"] = TokenType.Else,
             ["void"] = TokenType.VoidType,
             ["return"] = TokenType.Return,

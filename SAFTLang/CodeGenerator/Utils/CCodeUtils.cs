@@ -18,5 +18,19 @@ internal static class CCodeUtils
     {
         return $"saft_f_{name}";
     }
-    
+
+    public static string ExcapeCChar(char value)
+    {
+        return value switch
+        {
+            '\\' => "\\\\",
+            '\'' => "\\'",
+            '\n' => "\\n",
+            '\t' => "\\t",
+            '\r' => "\\r",
+            '\0' => "\\0",
+
+            _ => value.ToString()
+        };
+    }
 }

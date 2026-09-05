@@ -33,6 +33,8 @@ func main() void {
 
 `let s = "Hello World"` ==> string
 
+Strings are not allowed to be multiline.
+
 `let b1 = 4 < 9` => bool
 
 `let b2 = s < 1` ==> error
@@ -108,6 +110,8 @@ if x > 10 {
   foo2()
 }
 ```
+
+`else if` is also supported.
 
 ### For
 

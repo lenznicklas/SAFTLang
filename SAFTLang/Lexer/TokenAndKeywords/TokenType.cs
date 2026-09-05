@@ -4,6 +4,7 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         EOF,
         Identifier,
         String,
+        Char,
         Let,
         Const,
         If,
@@ -53,6 +54,7 @@ namespace SAFTLang.Lexer.TokenAndKeywords;
         BoolType,
         IntType,
         StringType,
+        CharType,
         VoidType,
         
         BadToken,

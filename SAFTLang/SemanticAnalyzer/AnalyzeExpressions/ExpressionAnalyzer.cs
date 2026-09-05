@@ -28,6 +28,8 @@ internal sealed partial class ExpressionAnalyzer
                 LangType.Bool,
             StringExpr =>
                 LangType.String,
+            CharExpr =>
+                LangType.Char,
             IdentifierExpr ident =>
                 AnalyzeIdentifier(ident),
             BinaryExpr binary =>

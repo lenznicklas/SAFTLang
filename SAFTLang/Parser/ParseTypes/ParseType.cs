@@ -14,6 +14,7 @@ internal sealed partial class TypeParser
             TokenType.IntType => LangType.Int,
             TokenType.BoolType => LangType.Bool,
             TokenType.StringType => LangType.String,
+            TokenType.CharType => LangType.Char,
             TokenType.VoidType => LangType.Void,
             _ => LangType.Error
         };
