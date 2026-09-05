@@ -6,7 +6,10 @@ internal static class CCodeUtils
     {
         return value
             .Replace("\\", "\\\\")
-            .Replace("\"", "\\\"");
+            .Replace("\"", "\\\"")
+            .Replace("\n", "\\n")
+            .Replace("\t", "\\t")
+            .Replace("\r", "\\r");
     }
 
     public static string GenerateVariableIdentifier(string name)
