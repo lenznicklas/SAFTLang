@@ -1,4 +1,5 @@
 using SAFTLang.AST.Expressions;
+using SAFTLang.Lexer.Text;
 using SAFTLang.Lexer.TokenAndKeywords;
 
 namespace SAFTLang.Parser.ParseExpressions;
@@ -57,10 +58,34 @@ internal sealed partial class ExpressionParser
         if (token.Type == TokenType.Identifier)
         {
             _state.Advance();
-            return new IdentifierExpr(
-                token.Value,
-                token.Span
-            );
+
+            var parts = new List<string>
+            {
+                token.Value
+            };
+
+            SourceSpan lastSpan = token.Span;
+
+            while (_state.Current.Type == TokenType.DoubleColon)
+            {
+                _state.Consume(TokenType.DoubleColon);
+
+                Token part = _state.Consume(TokenType.Identifier);
+                parts.Add(part.Value);
+                
+                lastSpan = part.Span;
+            }
+
+            if (parts.Count == 1)
+            {
+                return new IdentifierExpr(
+                    token.Value,
+                    token.Span
+                );
+            }
+
+            return new QualifiedNameExpr(parts, SourceSpan.Combine(token.Span, lastSpan));
+
         }
 
         if (token.Type == TokenType.LParen)

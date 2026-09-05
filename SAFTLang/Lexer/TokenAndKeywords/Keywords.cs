@@ -23,5 +23,7 @@ public static class KeywordsDict
             ["break"] = TokenType.Break,
             ["and"] = TokenType.And,
             ["or"] = TokenType.Or,
+            ["import"] = TokenType.Import,
+            ["as"] = TokenType.As,
         };
 }

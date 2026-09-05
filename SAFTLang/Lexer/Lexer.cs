@@ -144,9 +144,21 @@ namespace SAFTLang.Lexer;
                         );
                         break;
                     case ':':
-                        tokens.Add(
-                            _state.CreateSimpleToken(TokenType.Colon, ":", tokenStart, tokenLine, tokenColumn)
-                        );
+                        if (_state.Peek == ':')
+                        {
+                            tokens.Add(
+                                _state.CreateSimpleToken(TokenType.DoubleColon, "::", tokenStart, tokenLine,
+                                    tokenColumn)
+                            );
+                            _state.Advance();
+                        }
+                        else
+                        {
+                            tokens.Add(
+                                _state.CreateSimpleToken(TokenType.Colon, ":", tokenStart, tokenLine, tokenColumn)
+                            );
+                        }
+
                         break;
                     case '(':
                         tokens.Add(

@@ -1,6 +1,10 @@
 namespace SAFTLang.Lexer.TokenAndKeywords;
     public enum TokenType
     {
+        Import,
+        As,
+        DoubleColon,
+        
         EOF,
         Identifier,
         String,
