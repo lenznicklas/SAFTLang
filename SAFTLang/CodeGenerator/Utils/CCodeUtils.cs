@@ -18,9 +18,5 @@ internal static class CCodeUtils
     {
         return $"saft_f_{name}";
     }
-
-    public static string GenerateIdentifier(string name)
-    {
-        return $"saft_i_{name}";
-    }
+    
 }

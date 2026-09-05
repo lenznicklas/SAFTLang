@@ -5,6 +5,7 @@ using SAFTLang.CodeGenerator.GenerateFunctions;
 using SAFTLang.CodeGenerator.GenerateStatements;
 using SAFTLang.CodeGenerator.GenerateTypes;
 using SAFTLang.CodeGenerator.Runtime;
+using SAFTLang.CodeGenerator.Utils;
 
 namespace SAFTLang.CodeGenerator;
 
@@ -54,7 +55,7 @@ public sealed class CodeGenerator
         
         output.AppendLine("int main(void)");
         output.AppendLine("{");
-        output.AppendLine("    saft_main();");
+        output.AppendLine($"    {CCodeUtils.GenerateFunctionIdentifier("main")}();");
         output.AppendLine();
         output.AppendLine("    return 0;");
         output.AppendLine("}");

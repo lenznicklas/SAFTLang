@@ -28,7 +28,7 @@ internal sealed partial class StatementAnalyzer
         } 
         else if (declaredType != valueType)
         {
-            _diagnostics.ReportError(statement.Span, $"Expected {valueType} to be declared as {valueType}, not {declaredType}");
+            _diagnostics.ReportError(statement.Span, $"Expected {declaredType} but got {valueType}");
         }
     }
 

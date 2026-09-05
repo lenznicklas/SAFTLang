@@ -56,7 +56,7 @@ internal sealed partial class ExpressionAnalyzer
         {
             _diagnostics.ReportError(
                 call.Span,
-                $"Function '{function.Name}' expects  argument"
+                $"Function '{function.Name}' expects {function.ParameterTypes.Count} arguments but got {call.Arguments.Count}"
             );
 
             return LangType.Error;

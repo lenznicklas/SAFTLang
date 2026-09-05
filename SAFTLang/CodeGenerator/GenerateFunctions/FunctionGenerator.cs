@@ -35,7 +35,7 @@ internal sealed class FunctionGenerator
                 ", ",
                 function.Parameters.Select(parameter =>
                     $"{_typeGenerator.GenerateType(parameter.Type)} " +
-                    $"{CCodeUtils.GenerateIdentifier(parameter.Name)}"
+                    $"{CCodeUtils.GenerateVariableIdentifier(parameter.Name)}"
                 )
             );
         }

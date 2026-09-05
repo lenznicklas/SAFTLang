@@ -25,7 +25,7 @@ internal sealed partial class ExpressionGenerator
                 num.Value,
 
             IdentifierExpr ident =>
-                CCodeUtils.GenerateIdentifier(ident.Name),
+                CCodeUtils.GenerateVariableIdentifier(ident.Name),
 
             BinaryExpr binary =>
                 GenerateBinaryExpression(binary),
