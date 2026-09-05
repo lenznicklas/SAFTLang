@@ -11,9 +11,9 @@
 `bool`
 `int`
 `string`
+`char`
 `array`
 `void`
-`error`
 
 ## (Current) Syntax
 
@@ -33,7 +33,9 @@ func main() void {
 
 `let s = "Hello World"` ==> string
 
-Strings are not allowed to be multiline.
+`let c = 'c'` ==> char
+
+Strings and chars are not allowed to be multiline.
 
 `let b1 = 4 < 9` => bool
 

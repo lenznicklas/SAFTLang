@@ -37,7 +37,7 @@ internal sealed partial class ExpressionGenerator
                 $"\"{CCodeUtils.EscapeCString(str.Value)}\"",
             
             CharExpr chr =>
-                $"'{CCodeUtils.ExcapeCChar(chr.Value)}'",
+                $"'{CCodeUtils.EscapeCChar(chr.Value)}'",
             
             CallExpr call =>
                 GenerateCallExpression(call),

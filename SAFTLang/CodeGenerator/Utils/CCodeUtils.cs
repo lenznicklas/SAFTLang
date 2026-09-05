@@ -19,7 +19,7 @@ internal static class CCodeUtils
         return $"saft_f_{name}";
     }
 
-    public static string ExcapeCChar(char value)
+    public static string EscapeCChar(char value)
     {
         return value switch
         {

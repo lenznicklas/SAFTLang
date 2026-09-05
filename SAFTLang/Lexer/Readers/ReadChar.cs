@@ -40,7 +40,7 @@ internal sealed partial class TokenReader
         {
             _diagnostics.ReportError(
                 new SourceSpan(start, _state.Position - start, line, column),
-                "Char literal must conatin exactly one character"
+                "Char literal must contain exactly one character"
             );
             
             return _state.CreateToken(TokenType.BadToken, "", start, _state.Position-start,  line, column);
