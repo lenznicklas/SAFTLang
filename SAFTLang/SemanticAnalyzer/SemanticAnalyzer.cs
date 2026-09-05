@@ -7,6 +7,7 @@ using SAFTLang.SemanticAnalyzer.AnalyzeExpressions;
 using SAFTLang.SemanticAnalyzer.AnalyzeStatements;
 using SAFTLang.SemanticAnalyzer.ControlFlow;
 using SAFTLang.SemanticAnalyzer.ProgramValidation;
+using SAFTLang.SemanticAnalyzer.Symbols;
 
 namespace SAFTLang.SemanticAnalyzer;
 
@@ -27,11 +28,13 @@ public sealed class SemanticAnalyzer
         var controlFlow = new ControlFlowAnalyzer();
         
         _statementAnalyzer = new StatementAnalyzer(_state, expressions, controlFlow, _diagnostics);
-        _programValidator = new ProgramValidator(_state, _diagnostics);
+        _programValidator = new ProgramValidator(_diagnostics);
     }
     
     public void Analyze(List<Statement> statements)
     {
+        var module = new Module(["project", "main"], statements);
+        AnalyzeModules([module], module);
         foreach (Statement statement in statements)
         {
             if (statement is not FunctionStatement function)
@@ -40,11 +43,11 @@ public sealed class SemanticAnalyzer
             }
             else
             {
-                _state.DeclareFunction(function);
+                _state.DeclareFunction(module, function);
             }
         }
 
-        _programValidator.ValidateMain(statements);
+        _programValidator.ValidateMain(module);
 
         foreach (Statement statement in statements)
         {
@@ -101,7 +104,13 @@ public sealed class SemanticAnalyzer
         _state.CurrentModule = null;
     }
     
-    
+    public FunctionSymbol GetResolvedFunction(
+        CallExpr call)
+    {
+        return _state.GetResolvedFunction(
+            call
+        );
+    }
 
 
 }

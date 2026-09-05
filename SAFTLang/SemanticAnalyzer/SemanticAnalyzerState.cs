@@ -16,7 +16,7 @@ internal sealed class SemanticAnalyzerState
     private readonly Dictionary<Statement, LangType> _statementTypes = new();
     private readonly Dictionary<Expr, LangType> _expressionTypes = new();
 
-    private readonly Dictionary<CallExpr, FunctionStatement> _resolvedCalls = new();
+    private readonly Dictionary<CallExpr, FunctionSymbol> _resolvedCalls = new();
     
     public Module? CurrentModule { get; set; }
     
@@ -128,7 +128,7 @@ internal sealed class SemanticAnalyzerState
             function.ReturnType
         );
         
-        _functions.Add(function.Name, symbol);
+        _functions.Add(qualifiedName, symbol);
     }
 
     public FunctionSymbol? ResolveFunction(string name, SourceSpan span)
@@ -217,7 +217,7 @@ internal sealed class SemanticAnalyzerState
 
         if (import is not null)
         {
-            string qualifiedName = $"{import.ModuleName}::{import.ModuleName}";
+            string qualifiedName = $"{import.ModuleName}::{import.MemberName}";
 
             if (_functions.TryGetValue(qualifiedName, out FunctionSymbol? importedFunction))
             {
