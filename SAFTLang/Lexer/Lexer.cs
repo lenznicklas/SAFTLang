@@ -258,17 +258,11 @@ namespace SAFTLang.Lexer;
                         break;
                     
                     case '#':
-                        tokens.Add(
-                            _state.CreateSimpleToken(TokenType.CommentHashtag, "#", tokenStart, tokenLine, tokenColumn)
-                        );
-                        while (_state.Current != '\n')
+                        while (_state.Current != '\n' &&
+                               !_state.IsAtEnd)
                         {
                             _state.Advance();
                         }
-
-                        tokens.Add(
-                            _state.CreateSimpleToken(TokenType.Newline, "\\n", tokenStart, tokenLine, tokenColumn)
-                        );
                         break;
                     default:
                     {
