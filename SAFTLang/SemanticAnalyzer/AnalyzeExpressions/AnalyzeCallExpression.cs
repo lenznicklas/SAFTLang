@@ -6,81 +6,113 @@ namespace SAFTLang.SemanticAnalyzer.AnalyzeExpressions;
 
 internal sealed partial class ExpressionAnalyzer
 {
-    private LangType AnalyzeCall(CallExpr call)
+private LangType AnalyzeCall(
+    CallExpr call)
+{
+    if (call.Callee is IdentifierExpr identifier)
     {
-        if (call.Callee is not IdentifierExpr identifier)
-        {
-            _diagnostics.ReportError(
-                call.Callee.Span,
-                "Expression is not callable"
-            );
-
-            return LangType.Error;
-        }
-
         if (identifier.Name == "print")
         {
             if (call.Arguments.Count != 1)
             {
                 _diagnostics.ReportError(
                     call.Span,
-                    $"Function 'print' expects exactly one argument"
+                    "Function 'print' expects exactly one argument"
                 );
 
                 return LangType.Error;
             }
 
-            AnalyzeExpression(call.Arguments[0]);
-            
+            AnalyzeExpression(
+                call.Arguments[0]
+            );
+
             return LangType.Void;
         }
 
         if (identifier.Name == "len")
         {
-            return AnalyzeLenCall(call);
+            return AnalyzeLenCall(
+                call
+            );
         }
 
         if (identifier.Name == "append")
         {
-            return AnalyzeAppendCall(call);
-        }
-
-        FunctionSymbol? function = _state.ResolveFunction(identifier.Name, identifier.Span);
-
-        if (function is null)
-        {
-            return LangType.Error;
-        }
-        
-        if (call.Arguments.Count != function.ParameterTypes.Count)
-        {
-            _diagnostics.ReportError(
-                call.Span,
-                $"Function '{function.Name}' expects {function.ParameterTypes.Count} arguments but got {call.Arguments.Count}"
+            return AnalyzeAppendCall(
+                call
             );
-
-            return LangType.Error;
         }
-
-        for (int i = 0; i < call.Arguments.Count; i++)
-        {
-            Expr argument = call.Arguments[i];
-
-            LangType expectedType = function.ParameterTypes[i];
-            
-            LangType actualType = AnalyzeExpression(argument, expectedType);
-
-            if (actualType != LangType.Error &&
-                actualType != expectedType)
-            {
-                _diagnostics.ReportError(
-                    argument.Span,
-                    $"Argument {i + 1} of function '{function.Name}' expects {expectedType} but got {actualType}"
-                );
-            }
-        }
-        
-        return function.ReturnType;
     }
 
+    if (call.Callee is not IdentifierExpr &&
+        call.Callee is not QualifiedNameExpr)
+    {
+        _diagnostics.ReportError(
+            call.Callee.Span,
+            "Expression is not callable"
+        );
+
+        return LangType.Error;
+    }
+
+    FunctionSymbol? function =
+        _state.ResolveFunction(
+            call.Callee,
+            call.Callee.Span
+        );
+
+    if (function is null)
+    {
+        return LangType.Error;
+    }
+
+    _state.SetResolvedFunction(
+        call,
+        function
+    );
+
+    if (call.Arguments.Count !=
+        function.ParameterTypes.Count)
+    {
+        _diagnostics.ReportError(
+            call.Span,
+            $"Function '{function.Name}' expects " +
+            $"{function.ParameterTypes.Count} arguments " +
+            $"but got {call.Arguments.Count}"
+        );
+
+        return LangType.Error;
+    }
+
+    for (int i = 0;
+         i < call.Arguments.Count;
+         i++)
+    {
+        Expr argument =
+            call.Arguments[i];
+
+        LangType expectedType =
+            function.ParameterTypes[i];
+
+        LangType actualType =
+            AnalyzeExpression(
+                argument,
+                expectedType
+            );
+
+        if (actualType != LangType.Error &&
+            actualType != expectedType)
+        {
+            _diagnostics.ReportError(
+                argument.Span,
+                $"Argument {i + 1} of function " +
+                $"'{function.Name}' expects " +
+                $"{expectedType} but got {actualType}"
+            );
+        }
+    }
+
+    return function.ReturnType;
+}
 }

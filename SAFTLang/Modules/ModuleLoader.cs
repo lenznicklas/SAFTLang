@@ -51,7 +51,7 @@ internal sealed class ModuleLoader
         return LoadModule(modulePath, filePath, importSpan);
     }
 
-    private Module? LoadModule(IReadOnlyList<string> modulePath, string filePath, SourceSpan importSpan)
+    private Module? LoadModule(IReadOnlyList<string> modulePath, string filePath, SourceSpan? importSpan)
     {
         string moduleName = string.Join("::", modulePath);
 
@@ -91,7 +91,7 @@ internal sealed class ModuleLoader
             {
                 if (importSpan is not null)
                 {
-                    _diagnostics.ReportError(importSpan, $"Could not read module '{moduleName}'");
+                    _diagnostics.ReportError(importSpan, $"Could not read module '{moduleName}': {e.Message}");
                 }
 
                 return null;

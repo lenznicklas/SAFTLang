@@ -2,6 +2,7 @@ using SAFTLang.AST.Expressions;
 using SAFTLang.AST.Statements;
 using SAFTLang.AST.Types;
 using SAFTLang.Diagnostics;
+using SAFTLang.Modules;
 using SAFTLang.SemanticAnalyzer.AnalyzeExpressions;
 using SAFTLang.SemanticAnalyzer.AnalyzeStatements;
 using SAFTLang.SemanticAnalyzer.ControlFlow;
@@ -61,6 +62,46 @@ public sealed class SemanticAnalyzer
         return _state.GetExpressionType(expr);
     }
 
+    public void AnalyzeModules(IReadOnlyList<Module> modules, Module entryModule)
+    {
+        foreach (Module module in modules)
+        {
+            foreach (Statement statement in module.Statements)
+            {
+                switch (statement)
+                {
+                    case ImportStatement:
+                        break;
+                    
+                    case FunctionStatement func:
+                        _state.DeclareFunction(module, func);
+                        break;
+                    
+                    default:
+                        _diagnostics.ReportError(
+                            statement.Span,
+                            "Only imports and function declarations are allowed at top level"
+                        );
+                        break;
+                }
+            }
+        }
+        
+        _programValidator.ValidateMain(entryModule);
+
+        foreach (Module module in modules)
+        {
+            _state.CurrentModule = module;
+            foreach (FunctionStatement function in module.Statements.OfType<FunctionStatement>())
+            {
+                _statementAnalyzer.AnalyzeStatement(function);
+            }
+        }
+        
+        _state.CurrentModule = null;
+    }
+    
+    
 
 
 }
