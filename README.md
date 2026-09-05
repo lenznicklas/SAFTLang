@@ -171,3 +171,9 @@ func foo() int {
 ```
 
 You can call a function by simply using: `foo()`.
+
+### Comments
+
+If you want to comment you can use `#` to comment until the end of the line:
+
+`let x = 5 # int`
