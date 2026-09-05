@@ -47,21 +47,22 @@ internal sealed class SemanticAnalyzerState
         bool isConst,
         SourceSpan span)
     {
-        Dictionary<string, VariableSymbol> currentScope = _scopes.Peek();
-
-        if (currentScope.ContainsKey(name))
+        foreach (Dictionary<string, VariableSymbol> scope in _scopes)
         {
-            _diagnostics.ReportError(
-                span,
-                $"Variable '{name}' is already defined in this scope"
-            );
-            return null;
+            if (scope.ContainsKey(name))
+            {
+                _diagnostics.ReportError(span, $"Variable '{name}' is already defined");
+                
+                return null;
+            }
         }
         
         var symbol = new VariableSymbol(name, type, isConst);
         
-        currentScope.Add(name, symbol);
+        _scopes.Peek().Add(name, symbol);
+        
         return symbol;
+
     }
 
     public VariableSymbol? ResolveVariable(string name, SourceSpan span)
